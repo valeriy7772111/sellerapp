@@ -7,6 +7,23 @@ from flask import request, Response
 
 app = Flask(__name__)
 
+
+import subprocess
+
+def _get_app_version():
+    # short git sha if repo exists; otherwise fallback
+    try:
+        return subprocess.check_output(["git","rev-parse","--short","HEAD"], text=True).strip()
+    except Exception:
+        return "unknown"
+
+APP_VERSION = _get_app_version()
+
+@app.context_processor
+def inject_globals():
+    return {"APP_VERSION": APP_VERSION}
+
+
 @app.route('/health')
 def health():
     return {'status': 'ok'}, 200

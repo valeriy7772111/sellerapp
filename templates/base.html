@@ -107,6 +107,7 @@
   </style>
 
   {% block head %}{% endblock %}
+  <link rel="stylesheet" href="/static/css/custom.css">
 </head>
 {% include 'footer.html' %}
 <body>
@@ -278,3 +279,10 @@
 </script>
 </body
 </html>
+
+
+<footer class="site-footer">
+  <div class="container">
+    <div>SellerApp • <span class="muted">build: {{ APP_VERSION }}</span></div>
+  </div>
+</footer>
