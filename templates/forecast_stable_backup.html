@@ -1,0 +1,63 @@
+	{% extends "base.html" %}
+{% block content %}
+<h2>🧠 Прогноз спроса</h2>
+<p>Оценка изменения спроса на основе данных за последние 14 дней</p>
+
+<div id="forecast-container" class="table-wrapper">
+  <table class="data-table" id="forecast-table">
+    <the	ad>
+      <tr>
+        <th>Товар</th>
+        <th>Категория</th>
+        <th>Тренд</th>
+        <th>Рекомендация</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td colspan="4">Загрузка данных...</td></tr>
+    </tbody>
+  </table>
+</div>
+
+
+<script>
+async function loadForecast() {
+  try {
+    const res = await fetch('/api/forecast');
+    const data = await res.json();
+    const tbody = document.querySelector('#forecast-table tbody');
+    tbody.innerHTML = '';
+    if (data.results && data.results.length > 0) {
+      data.results.forEach(p => {
+        const tr = document.createElement('tr');
+        const trendColor = p.status === 'growth' ? '#00ffae' :
+                           p.status === 'drop' ? '#ff6666' : '#ffaa00';
+        tr.innerHTML = `
+          <td>${p.name}</td>
+          <td>${p.category}</td>
+          <td style="color:${trendColor}; font-weight:600;">
+            ${p.trend > 0 ? '+' : ''}${p.trend}%
+          </td>
+          <td>${p.recommendation}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    } else {
+      tbody.innerHTML = '<tr><td colspan="4">Нет данных для отображения</td></tr>';
+    }
+  } catch (err) {
+    document.querySelector('#forecast-table tbody').innerHTML =
+      '<tr><td colspan="4">Ошибка загрузки данных</td></tr>';
+  }
+}
+loadForecast();
+</script>
+
+<style>
+.data-table th {
+  background: rgba(255,255,255,0.12);
+  font-weight: 600;
+}
+</style>
+{% endblock %}
+

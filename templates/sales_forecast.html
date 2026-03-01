@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block title %}📈 Прогноз продаж — SellerApp Pro{% endblock %}
+
+{% block content %}
+  <!-- ЛОГО -->
+  <img id="logoGlow" src="{{ url_for('static', filename='logo.svg') }}"
+       alt="SellerApp Pro"
+       style="width:84px;height:84px;margin:24px auto 8px;display:block;filter:drop-shadow(0 0 12px rgba(0,255,255,0.45));opacity:0.9;" />
+
+  <h1>📈 Прогноз продаж</h1>
+  <p>Динамика продаж за последние 14 дней</p>
+
+  <!-- ГРАФИК -->
+  <div class="chart-card">
+    <canvas id="salesChart" height="200"></canvas>
+  </div>
+
+  <!-- КНОПКИ -->
+  <div class="btn-row">
+    <button class="btn" id="refreshBtn">⟳ Обновить прогноз</button>
+  </div>
+{% endblock %}
+
+{% block scripts %}
+<style>
+  .chart-card {
+    max-width: 680px;
+    margin: 18px auto;
+    padding: 18px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 16px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+    backdrop-filter: blur(4px);
+  }
+  canvas { width:100%; }
+  .btn-row {
+    display:flex; justify-content:center; gap:14px;
+    margin:24px 0 12px; flex-wrap:wrap;
+  }
+  .toast-ok{
+    position: fixed; left: 50%; bottom: 84px; transform: translateX(-50%) scale(.95);
+    background: linear-gradient(180deg,#2ddc71,#16b85c);
+    color:#fff; font-weight:700;
+    padding: 10px 18px; border-radius:12px;
+    opacity: 0; transition: opacity .3s, transform .3s; z-index: 9999;
+  }
+  .toast-ok.show{ opacity:1; transform: translateX(-50%) scale(1); }
+</style>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  const ctx = document.getElementById('salesChart');
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: ['Пн','Вт','Ср','Чт','Пт','Сб','Вс','Пн','Вт','Ср','Чт','Пт','Сб','Вс'],
+      datasets: [{
+        label: 'Продажи, шт.',
+        data: [50,55,68,62,95,80,67,70,76,82,89,97,90,85],
+        borderColor: '#00ffd5',
+        backgroundColor: 'rgba(0,255,213,0.15)',
+        borderWidth: 2,
+        tension: 0.4,
+        fill: true,
+        pointRadius: 5,
+        pointBackgroundColor: '#00ffd5',
+        pointBorderWidth: 1.5,
+        pointBorderColor: '#003b74'
+      }]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        x: { grid:{color:'rgba(255,255,255,0.1)'}, ticks:{color:'#fff'} },
+        y: { grid:{color:'rgba(255,255,255,0.08)'}, ticks:{color:'#fff'} }
+      },
+      plugins:{ legend:{ labels:{ color:'#fff' } } }
+    }
+  });
+
+  // обновление прогноза
+  (function(){
+    const btn=document.getElementById('refreshBtn');
+    if(!btn) return;
+    btn.addEventListener('click', async ()=>{
+      try{ await fetch('/api/sales_forecast',{cache:'no-store'}); }catch(e){}
+      showToast('✅ Прогноз обновлён');
+    });
+    function showToast(txt){
+      const t=document.createElement('div');
+      t.className='toast-ok'; t.textContent=txt; document.body.appendChild(t);
+      requestAnimationFrame(()=>t.classList.add('show'));
+      setTimeout(()=>{t.classList.remove('show');setTimeout(()=>t.remove(),300);},2000);
+    }
+  })();
+</script>
+{% endblock %}

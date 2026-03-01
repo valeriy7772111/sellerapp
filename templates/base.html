@@ -1,0 +1,280 @@
+
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#003b74" />
+  <title>{% block title %}SellerApp Pro{% endblock %}</title>
+
+  <style>
+    /* ====== БАЗА / ФОН / АНИМАЦИИ ====== */
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{
+      font-family:"Segoe UI",system-ui,sans-serif;
+      color:#fff;min-height:100vh;display:flex;flex-direction:column;
+      background:linear-gradient(135deg,#003b74,#00c6c3);
+      background-size:200% 200%;
+      animation:gradientMove 10s ease infinite;
+      overflow-x:hidden;padding-bottom:90px;
+      opacity:0;animation:fadeIn .6s ease forwards;
+    }
+    @keyframes gradientMove{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+    @keyframes fadeIn{to{opacity:1}}
+
+    main{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;text-align:center;padding:20px 10px 60px;}
+    h1{font-size:26px;margin:10px 0;text-shadow:0 0 10px rgba(0,255,255,.35)}
+    p{opacity:.9;margin-bottom:16px}
+    .btn{background:linear-gradient(90deg,#00bfff,#00ffd5);color:#003b74;font-weight:700;border:none;border-radius:12px;padding:10px 20px;cursor:pointer;font-size:15px;box-shadow:0 4px 10px rgba(0,0,0,.2);transition:transform .15s ease,opacity .15s ease;}
+    .btn:hover{transform:scale(1.05);opacity:.95;}
+
+    footer{
+      text-align:center;font-size:13px;color:rgba(255,255,255,.85);
+      padding:10px;backdrop-filter:blur(10px);
+      background:rgba(0,0,0,.25);border-top:1px solid rgba(255,255,255,.15);
+      position:fixed;bottom:0;left:0;width:100%;z-index:100;
+    }
+    footer a{color:#00ffd5;text-decoration:none;font-weight:600}
+
+    /* ====== TOAST / LOADER ====== */
+    .toast-global{position:fixed;left:50%;bottom:84px;transform:translateX(-50%) scale(.95);background:linear-gradient(180deg,#2ddc71,#16b85c);color:#fff;font-weight:700;padding:10px 18px;border-radius:12px;opacity:0;transition:opacity .3s,transform .3s;z-index:9999;font-size:15px;box-shadow:0 0 10px rgba(0,0,0,.3)}
+    .toast-global.show{opacity:1;transform:translateX(-50%) scale(1)}
+    #loaderOverlay{position:fixed;inset:0;background:rgba(0,0,0,.55);color:#00ffd5;font-size:18px;display:none;align-items:center;justify-content:center;z-index:9998;backdrop-filter:blur(4px)}
+    #loaderOverlay.show{display:flex}
+
+    /* ====== ВЫЕЗЖАЮЩЕЕ БОКОВОЕ МЕНЮ (компактное, ~70% высоты) ====== */
+    #edgeHotspot{
+      position:fixed;top:0;right:0;width:14px;height:100vh;z-index:9800;
+      /* невидимая область для тапа/свайпа */
+    }
+    #sideMenuOverlay{
+      position:fixed;inset:0;background:rgba(0,0,0,.45);backdrop-filter:blur(2px);
+      display:none;z-index:9800;
+    }
+    #sideMenu{
+      position:fixed;right:12px;top:15vh;height:70vh;width:280px;
+      background:linear-gradient(135deg,rgba(255,255,255,.12),rgba(255,255,255,.06));
+      border:1px solid rgba(255,255,255,.28);border-radius:20px;
+      box-shadow:0 10px 28px rgba(0,0,0,.25);
+      transform:translateX(120%);transition:transform .28s ease;
+      z-index:9850;display:flex;flex-direction:column;overflow:hidden;
+    }
+    #sideMenu.show{transform:translateX(0)}
+    .sm-head{padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.2);font-weight:800;letter-spacing:.2px;background:rgba(0,0,0,.25)}
+    .sm-body{padding:10px 8px;display:flex;flex-direction:column;gap:8px;overflow:auto}
+    .sm-btn{
+      display:flex;align-items:center;gap:10px;width:100%;
+      background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.25);
+      color:#fff;text-align:left;padding:12px 14px;border-radius:14px;font-size:15px;
+      cursor:pointer;transition:transform .15s ease, background .15s ease, box-shadow .15s ease;
+      backdrop-filter:blur(6px);
+    }
+    .sm-btn:hover{transform:translateX(2px);background:rgba(255,255,255,.20)}
+    .sm-btn.active{background:linear-gradient(135deg,#00bfff,#00ffd5);color:#07384a;box-shadow:0 0 16px rgba(0,198,255,.55)}
+    .sm-spacer{flex:1}
+    .sm-footer{padding:10px 12px;border-top:1px solid rgba(255,255,255,.2);display:flex;flex-direction:column;gap:8px;background:rgba(0,0,0,.18)}
+
+    /* ====== ПЛАВАЮЩАЯ КНОПКА AI и МОДАЛКА (fade + zoom) ====== */
+    #aiButton{
+      position:fixed;bottom:100px;right:20px;width:64px;height:64px;border-radius:50%;
+      background:linear-gradient(135deg,#00bfff,#00ffd5);border:none;cursor:pointer;
+      box-shadow:0 0 20px rgba(0,255,255,.6);font-size:28px;color:#003b74;
+      animation:pulseAI 3s ease-in-out infinite;z-index:9500;transition:transform .2s ease,opacity .2s ease;
+    }
+    #aiButton:hover{transform:scale(1.1);opacity:.9}
+    @keyframes pulseAI{0%,100%{box-shadow:0 0 10px rgba(0,255,255,.4)}50%{box-shadow:0 0 24px rgba(0,255,255,.9)}}
+
+    #assistantModal{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;z-index:10000;backdrop-filter:blur(8px);animation:fadeInModal .3s ease forwards;}
+    #assistantModal.show{display:flex}
+    @keyframes fadeInModal{from{opacity:0;transform:scale(.92)}to{opacity:1;transform:scale(1)}}
+    .assistant-window{width:92%;max-width:640px;max-height:80vh;overflow:hidden;background:linear-gradient(135deg,rgba(255,255,255,.1),rgba(255,255,255,.05));border:1px solid rgba(255,255,255,.25);border-radius:20px;box-shadow:0 0 30px rgba(0,255,255,.4);display:flex;flex-direction:column;animation:zoomIn .35s ease forwards;}
+    @keyframes zoomIn{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:scale(1)}}
+    .assistant-header{display:flex;justify-content:space-between;align-items:center;padding:12px 18px;border-bottom:1px solid rgba(255,255,255,.2);background:rgba(0,0,0,.3);backdrop-filter:blur(8px)}
+    .assistant-header h2{font-size:18px}
+    .assistant-header button{background:none;border:none;font-size:22px;color:#fff;cursor:pointer}
+    .assistant-body{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:8px;text-align:left}
+    .assistant-msg{background:#fff;color:#003b74;padding:10px 14px;border-radius:14px;box-shadow:0 4px 12px rgba(0,0,0,.2);max-width:80%;align-self:flex-start;animation:msgIn .25s ease both}
+    .assistant-msg.user{align-self:flex-end;background:linear-gradient(90deg,#00bfff,#00ffd5);color:#003b74}
+    @keyframes msgIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+    .assistant-input{display:flex;gap:8px;padding:10px;background:rgba(255,255,255,.1);border-top:1px solid rgba(255,255,255,.2)}
+    .assistant-input input{flex:1;padding:10px 12px;border-radius:12px;border:none;outline:none;background:rgba(255,255,255,.2);color:#fff}
+    .assistant-input button{background:linear-gradient(135deg,#00bfff,#00ffd5);border:none;border-radius:12px;padding:10px 16px;font-size:18px;color:#003b74;cursor:pointer}
+
+    @media(max-width:420px){
+      .assistant-window{max-width:94%;width:94%}
+      #sideMenu{width:260px}
+    }
+    @media(prefers-color-scheme:dark){body{background:linear-gradient(135deg,#001f40,#006666)}}
+  </style>
+
+  {% block head %}{% endblock %}
+</head>
+{% include 'footer.html' %}
+<body>
+  <!-- Лоадер и тост -->
+  <div id="loaderOverlay">Загрузка...</div>
+
+  <!-- Невидимая зона для тапа/свайпа, чтобы открыть меню -->
+  <div id="edgeHotspot"></div>
+  <!-- Подложка под меню -->
+  <div id="sideMenuOverlay"></div>
+  <!-- Выезжающее меню -->
+  <aside id="sideMenu" aria-label="Меню">
+    <div class="sm-head">Меню</div>
+    <div class="sm-body">
+      <button class="sm-btn" data-path="^/$"              onclick="goTo('/')">🏠 Главная</button>
+      <button class="sm-btn" data-path="^/forecast"       onclick="goTo('/forecast')">📊 Спрос</button>
+      <button class="sm-btn" data-path="^/sales_forecast" onclick="goTo('/sales_forecast')">📈 Продажи</button>
+      <button class="sm-btn" data-path="^/stocks"         onclick="goTo('/stocks')">📦 Остатки</button>
+      <button class="sm-btn" data-path="^/analytics"      onclick="goTo('/analytics')">📉 Аналитика</button>
+      <button class="sm-btn" data-path="^/deliveries"     onclick="goTo('/deliveries')">🚚 Поставки</button>
+      <button class="sm-btn" data-path="^/ads"            onclick="goTo('/ads')">💡 Реклама</button>
+      <button class="sm-btn" data-path="^/pro" onclick="goTo('/pro')">💎 Перейти на PRO</button>      <div class="sm-spacer"></div>
+      <button class="sm-btn" data-path="^/auth"           onclick="goTo('/auth')">👤 Регистрация / Вход</button>
+      <button class="sm-btn" data-path="^/settings"       onclick="goTo('/settings')">⚙️ Настройки</button>
+    </div>
+    <div class="sm-footer"></div>
+  </aside>
+
+  <!-- Плавающая кнопка AI -->
+  <button id="aiButton" title="AI-помощник">🤖</button>
+
+  <!-- Модальное окно ассистента -->
+  <div id="assistantModal">
+    <div class="assistant-window">
+      <div class="assistant-header">
+        <h2>AI-помощник</h2>
+        <button id="closeAssistant">×</button>
+      </div>
+      <div id="assistantChat" class="assistant-body"></div>
+      <div class="assistant-input">
+        <input id="assistantInput" type="text" placeholder="Введите сообщение..." />
+        <button id="assistantSend">➤</button>
+      </div>
+    </div>
+  </div>
+
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+
+
+  <script>
+    /* ===== Навигация / тост / лоадер ===== */
+    function goTo(url){ showLoader(true); setTimeout(()=>location.href=url,150); }
+    function showLoader(s=true){ const el=document.getElementById('loaderOverlay'); if(el) el.classList.toggle('show',s); }
+    function showToast(text){
+      const t=document.createElement('div'); t.className='toast-global'; t.textContent=text;
+      document.body.appendChild(t); requestAnimationFrame(()=>t.classList.add('show'));
+      setTimeout(()=>{ t.classList.remove('show'); setTimeout(()=>t.remove(),250); }, 1800);
+    }
+    setInterval(()=>{ fetch('/api/ping').then(r=>{ if(r.ok) showToast('📊 Данные обновлены'); }).catch(()=>{}); }, 60000);
+
+    /* ===== Активная подсветка в меню ===== */
+    document.addEventListener('DOMContentLoaded',()=>{
+      const cur=location.pathname;
+      document.querySelectorAll('#sideMenu .sm-btn').forEach(b=>{
+        const re=new RegExp(b.dataset.path||'','i');
+        if(re.test(cur)) b.classList.add('active'); else b.classList.remove('active');
+      });
+    });
+
+    /* ===== Выезжающее боковое меню ===== */
+    const edge = document.getElementById('edgeHotspot');
+    const overlay = document.getElementById('sideMenuOverlay');
+    const side = document.getElementById('sideMenu');
+    let hideTimer=null;
+
+    function openSide(){
+      overlay.style.display='block';
+      side.classList.add('show');
+      resetHideTimer();
+    }
+    function closeSide(){
+      side.classList.remove('show');
+      overlay.style.display='none';
+      if(hideTimer){ clearTimeout(hideTimer); hideTimer=null; }
+    }
+    function resetHideTimer(){
+      if(hideTimer) clearTimeout(hideTimer);
+      hideTimer=setTimeout(()=>closeSide(), 3000);
+    }
+
+    edge.addEventListener('click', openSide);
+    edge.addEventListener('touchstart', openSide, {passive:true});
+    overlay.addEventListener('click', closeSide);
+    side.addEventListener('mousemove', resetHideTimer);
+    side.addEventListener('touchmove', resetHideTimer, {passive:true});
+
+    /* ===== Плавающая модалка ассистента ===== */
+    const aiBtn=document.getElementById('aiButton');
+    const modal=document.getElementById('assistantModal');
+    const closeBtn=document.getElementById('closeAssistant');
+    const input=document.getElementById('assistantInput');
+    const send=document.getElementById('assistantSend');
+    const chat=document.getElementById('assistantChat');
+
+    aiBtn.addEventListener('click',()=>{ modal.classList.add('show'); input.focus(); });
+    closeBtn.addEventListener('click',()=>modal.classList.remove('show'));
+
+    send.addEventListener('click', sendMsg);
+    input.addEventListener('keydown', e=>{ if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); sendMsg(); } });
+
+    function addMsg(text, role){
+      const m=document.createElement('div');
+      m.className='assistant-msg'+(role==='user'?' user':'');
+      m.textContent=text;
+      chat.appendChild(m);
+      chat.scrollTop=chat.scrollHeight;
+    }
+
+    function sendMsg(){
+      const q=(input.value||'').trim(); if(!q) return;
+      addMsg(q, 'user'); input.value='';
+      fetch('/api/assistant', {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({question:q})
+      })
+      .then(r=>r.json())
+      .then(d=> addMsg((d && (d.answer||d.text||d.result)) || 'Готово.', 'bot'))
+      .catch(()=> addMsg('❗ Ошибка соединения.', 'bot'));
+    }
+  </script>
+
+  {% block scripts %}{% endblock %}
+<!-- ====== КНОПКА "НА ГЛАВНУЮ" ====== -->
+<!--
+<div id="homeBtnWrap" style="
+  position: fixed;
+  bottom: 88px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9500;
+  text-align: center;">
+  <button class="homeBtn" onclick="window.location.href='/'">
+    ← На главную
+  </button>
+</div>
+-->
+<style>
+.homeBtn {
+  background: linear-gradient(90deg, #00aaff, #00ffcc);
+  color: #00344f;
+  font-weight: 600;
+  font-size: 14px;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 18px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+  transition: all 0.3s ease;
+  display: inline-block;
+}
+.homeBtn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.3);
+}
+</style>
+</script>
+</body
+</html>

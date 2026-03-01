@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+
+{% block title %}🧠 Прогноз спроса — SellerApp Pro{% endblock %}
+
+{% block content %}
+  <!-- ЛОГО -->
+  <img id="logoGlow" src="{{ url_for('static', filename='logo.svg') }}"
+       alt="SellerApp Pro"
+       style="width:84px;height:84px;margin:24px auto 8px;display:block;filter:drop-shadow(0 0 12px rgba(0,255,255,0.45));opacity:0.9;" />
+
+  <h1>🧠 Прогноз спроса</h1>
+  <p>Оценка изменения спроса за последние 14 дней</p>
+
+  <!-- ТАБЛИЦА -->
+  <div class="demand-card">
+    <div class="grid head">
+      <div>Товар</div>
+      <div>Категория</div>
+      <div>Тренд</div>
+      <div>Рекомендация</div>
+    </div>
+
+    <div class="grid">
+      <div class="prod">Тёплый подоконник Ecosill</div>
+      <div>Подоконники</div>
+      <div class="trend up">
+        <div class="trend-wrap"><span class="arrow">▲</span><span class="val">+31%</span></div>
+      </div>
+      <div>📈 Спрос растёт — увеличить запас на 10–20%</div>
+    </div>
+
+    <div class="grid">
+      <div class="prod">Откос Moeler Light</div>
+      <div>Откосы</div>
+      <div class="trend down">
+        <div class="trend-wrap"><span class="arrow">▼</span><span class="val">−11.2%</span></div>
+      </div>
+      <div>📉 Спрос падает — оптимизировать закупки</div>
+    </div>
+
+    <div class="grid">
+      <div class="prod">Подоконник Danke Premium</div>
+      <div>Подоконники</div>
+      <div class="trend up">
+        <div class="trend-wrap"><span class="arrow">▲</span><span class="val">+15.5%</span></div>
+      </div>
+      <div>📈 Спрос растёт — увеличить запас на 5–10%</div>
+    </div>
+  </div>
+
+  <!-- КНОПКИ -->
+  <div class="btn-row">
+    <button class="btn" id="refreshBtn">⟳ Обновить прогноз</button>
+  </div>
+{% endblock %}
+
+{% block scripts %}
+<style>
+  /* карточка таблицы */
+  .demand-card{
+    max-width: 680px; margin: 14px auto 10px; padding: 8px;
+    background: rgba(0,0,0,0.14); /* чуть светлее */
+    border: 1px solid rgba(255,255,255,0.10);
+    border-radius: 16px;
+    box-shadow: 0 10px 26px rgba(0,0,0,0.25) inset, 0 20px 35px rgba(0,0,0,0.20);
+    backdrop-filter: blur(3px);
+    font-size: 15px; line-height: 1.28;
+  }
+
+  /* сетка 4 колонки: товар / категория / тренд / рекомендация */
+  .grid{
+    display: grid;
+    grid-template-columns: 2.1fr 1.25fr 0.9fr 2.25fr;
+    gap: 14px;
+    align-items: center;
+    padding: 14px 18px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+  }
+  .grid:first-of-type{ border-top: 0; }
+
+  /* заголовок */
+  .grid.head{
+    background: linear-gradient(180deg, rgba(255,255,255,0.12), rgba(255,255,255,0.05));
+    border-radius: 12px;
+    padding: 12px 16px;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: .02em;
+  }
+
+  .prod{ font-weight: 600; }
+
+  /* тренд */
+  .trend{
+    display:flex; align-items:center; gap:6px;
+    font-weight:700; white-space:nowrap;
+  }
+
+  .trend .arrow{ font-size: 12px; opacity:.9; }
+  .trend.up   { color:#42e19a; text-shadow: 0 0 6px rgba(66,225,154,.45); }
+  .trend.up .arrow{ color:#42e19a; }
+  .trend.down { color:#ff6b6b; text-shadow: 0 0 6px rgba(255,107,107,.45); }
+  .trend.down .arrow{ color:#ff6b6b; }
+
+  /* лёгкая пульсация процентов */
+  @keyframes glowPulse {
+    0%,100% { text-shadow: 0 0 5px rgba(255,255,255,0.15); }
+    50% { text-shadow: 0 0 10px rgba(255,255,255,0.35); }
+  }
+  .trend .val {
+    animation: glowPulse 3.5s ease-in-out infinite;
+  }
+
+  /* кнопки */
+  .btn-row{
+    display:flex; gap:14px; justify-content:center;
+    flex-wrap:wrap; margin:18px auto 0; max-width:680px;
+  }
+
+  /* зелёный тост */
+  .toast-ok{
+    position: fixed; left: 50%; bottom: 86px; transform: translateX(-50%) scale(.95);
+    background: linear-gradient(180deg,#2ddc71,#16b85c);
+    color:#fff;
+    padding: 14px 22px; border-radius: 14px;
+    box-shadow: 0 14px 30px rgba(0,0,0,.35);
+    font-weight: 700; letter-spacing: .01em;
+    opacity: 0; transition: opacity .25s, transform .25s;
+    z-index: 9999;
+  }
+  .toast-ok.show{ opacity:1; transform: translateX(-50%) scale(1); }
+</style>
+
+<script>
+  // обновление прогноза
+  (function(){
+    const btn=document.getElementById('refreshBtn');
+    if(!btn) return;
+    btn.addEventListener('click', async ()=>{
+      try{ await fetch('/api/forecast',{cache:'no-store'}); }catch(e){}
+      showToast('✅ Прогноз обновлён');
+    });
+    function showToast(txt){
+      const t=document.createElement('div');
+      t.className='toast-ok'; t.textContent=txt; document.body.appendChild(t);
+      requestAnimationFrame(()=>t.classList.add('show'));
+      setTimeout(()=>{t.classList.remove('show');setTimeout(()=>t.remove(),300);},2000);
+    }
+  })();
+</script>
+{% endblock %}

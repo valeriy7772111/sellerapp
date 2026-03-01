@@ -1,0 +1,12 @@
+[0;1;31m×[0m sellerapp.service - SellerApp Flask Service
+     Loaded: loaded (]8;;file://5840743-vv05233/etc/systemd/system/sellerapp.service/etc/systemd/system/sellerapp.service]8;;; [0;1;32menabled[0m; preset: [0;1;32menabled[0m)
+     Active: [0;1;31mfailed[0m (Result: exit-code) since Sat 2025-10-18 01:42:21 MSK; 28s ago
+   Duration: 279ms
+    Process: 4609 ExecStart=/root/sellerapp/venv/bin/python3 /root/sellerapp/app.py [0;1;31m(code=exited, status=1/FAILURE)[0m
+   Main PID: 4609 (code=exited, status=1/FAILURE)
+        CPU: 277ms
+
+Oct 18 01:42:21 5840743-vv05233 systemd[1]: sellerapp.service: Scheduled restart job, restart counter is at 5.
+Oct 18 01:42:21 5840743-vv05233 systemd[1]: [0;1;38;5;185m[0;1;39m[0;1;38;5;185msellerapp.service: Start request repeated too quickly.[0m
+Oct 18 01:42:21 5840743-vv05233 systemd[1]: [0;1;38;5;185m[0;1;39m[0;1;38;5;185msellerapp.service: Failed with result 'exit-code'.[0m
+Oct 18 01:42:21 5840743-vv05233 systemd[1]: [0;1;31m[0;1;39m[0;1;31mFailed to start sellerapp.service - SellerApp Flask Service.[0m

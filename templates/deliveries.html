@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block title %}🚚 Поставки — SellerApp Pro{% endblock %}
+
+{% block content %}
+  <!-- ЛОГО -->
+  <img id="logoGlow" src="{{ url_for('static', filename='logo.svg') }}"
+       alt="SellerApp Pro"
+       style="width:84px;height:84px;margin:24px auto 8px;display:block;filter:drop-shadow(0 0 12px rgba(0,255,255,0.45));opacity:0.9;" />
+
+  <h1>🚚 Поставки</h1>
+
+  <!-- ПОСТАВКИ WB -->
+  <div class="supply-block wb">
+    <h2>Поставки WB</h2>
+    <div class="table">
+      <div class="row head"><div>Дата/время</div><div>Товар</div><div>Кол-во</div><div>Статус</div></div>
+      <div class="row"><div>26.10.2025<br><small>(08:00–08:30)</small></div><div>Пример WB</div><div>50</div><div class="status wait">Ожидает</div></div>
+      <div class="row"><div>26.10.2025<br><small>(09:00–09:30)</small></div><div>Тест WB</div><div>30</div><div class="status ok">Отгружено</div></div>
+    </div>
+  </div>
+
+  <!-- ПОСТАВКИ OZON -->
+  <div class="supply-block ozon">
+    <h2>Поставки OZON</h2>
+    <div class="table">
+      <div class="row head"><div>Дата/время</div><div>Товар</div><div>Кол-во</div><div>Статус</div></div>
+      <div class="row"><div>26.10.2025<br><small>(09:00–10:00)</small></div><div>Пример OZON</div><div>50</div><div class="status wait">Ожидает</div></div>
+      <div class="row"><div>26.10.2025<br><small>(09:30–10:00)</small></div><div>Тест OZON</div><div>30</div><div class="status ok">Отгружено</div></div>
+    </div>
+  </div>
+
+  <!-- ПОСТАВКИ YANDEX -->
+  <div class="supply-block yandex">
+    <h2>Поставки YANDEX</h2>
+    <div class="table">
+      <div class="row head"><div>Дата/время</div><div>Товар</div><div>Кол-во</div><div>Статус</div></div>
+      <div class="row"><div>26.10.2025<br><small>(10:00–12:00)</small></div><div>Пример YANDEX</div><div>50</div><div class="status wait">Ожидает</div></div>
+      <div class="row"><div>26.10.2025<br><small>(10:00–12:00)</small></div><div>Тест YANDEX</div><div>30</div><div class="status ok">Отгружено</div></div>
+    </div>
+  </div>
+
+  <!-- КНОПКИ -->
+  <div class="btn-row">
+  </div>
+{% endblock %}
+
+{% block scripts %}
+<style>
+  h1{ margin-bottom:14px; }
+  .supply-block{
+    max-width: 720px;
+    margin: 20px auto;
+    padding: 14px 18px 18px;
+    border-radius: 16px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+    backdrop-filter: blur(5px);
+  }
+  .supply-block h2{
+    margin-bottom:10px;
+    font-size:18px;
+    text-align:left;
+  }
+  .supply-block.wb h2{ color:#b974ff; }
+  .supply-block.ozon h2{ color:#00bfff; }
+  .supply-block.yandex h2{ color:#ffd700; }
+
+  .table{
+    width:100%;
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+  }
+  .row{
+    display:grid;
+    grid-template-columns:1.4fr 1fr 0.6fr 0.9fr;
+    background:rgba(255,255,255,0.05);
+    padding:8px 12px;
+    border-radius:10px;
+    font-size:14px;
+    align-items:center;
+  }
+  .row.head{
+    background:rgba(255,255,255,0.12);
+    font-weight:700;
+    text-transform:uppercase;
+    font-size:13px;
+  }
+  .status{
+    text-align:center;
+    font-weight:700;
+    padding:4px 8px;
+    border-radius:8px;
+    font-size:13px;
+  }
+  .status.wait{ background:#ffd83d; color:#333; }
+  .status.ok{ background:#1ed760; color:#fff; }
+  .btn-row{ display:flex; justify-content:center; margin:24px 0 12px; }
+</style>
+{% endblock %}

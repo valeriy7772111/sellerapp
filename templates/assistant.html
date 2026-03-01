@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% block title %}🤖 AI-помощник — SellerApp Pro{% endblock %}
+
+{% block content %}
+<div class="page-with-sidebar">
+  <div class="assistant-head">
+    <div class="assistant-title">🤖 AI-помощник</div>
+    <div class="assistant-sub">Отвечает на вопросы продавцов и анализирует данные</div>
+  </div>
+
+  <div class="chat-card">
+    <div id="chat-box" class="chat-box"></div>
+    <div class="chat-input">
+      <input id="userInput" type="text" placeholder="Введите сообщение..." autocomplete="off" />
+      <button id="sendBtn" class="send">➤</button>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<style>
+  .assistant-head{position:sticky;top:12px;z-index:5;text-align:left;background:linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.15);border-radius:22px;padding:18px;margin-bottom:14px;backdrop-filter:blur(8px);box-shadow:0 8px 22px rgba(0,0,0,.18)}
+  .assistant-title{font-size:28px;font-weight:800}
+  .assistant-sub{opacity:.9;margin-top:6px}
+  .chat-card{background:linear-gradient(135deg,rgba(255,255,255,.06),rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.18);border-radius:22px;padding:18px 18px 16px;backdrop-filter:blur(8px);box-shadow:0 8px 22px rgba(0,0,0,.18)}
+  .chat-box{display:flex;flex-direction:column;gap:10px;min-height:180px;text-align:left;max-height:60vh;overflow-y:auto}
+  .msg{align-self:flex-start;max-width:86%;padding:12px 14px;border-radius:16px;background:#fff;color:#07384a;box-shadow:0 6px 18px rgba(0,0,0,.12);animation:msgIn .25s ease both}
+  .msg.user{align-self:flex-end}
+  @keyframes msgIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+  .typing{display:inline-flex;align-items:center;gap:6px;font-weight:600;color:#fff;opacity:.9}
+  .dot{width:6px;height:6px;border-radius:50%;background:#fff;opacity:.7;animation:blink 1.2s infinite}
+  .dot:nth-child(2){animation-delay:.2s}.dot:nth-child(3){animation-delay:.4s}
+  @keyframes blink{0%,80%,100%{opacity:.2}40%{opacity:1}}
+  .chat-input{display:flex;align-items:center;gap:10px;margin-top:12px}
+  .chat-input input{flex:1;height:48px;border-radius:16px;border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.14);color:#fff;padding:0 14px;outline:none}
+  .send{width:58px;height:58px;border-radius:18px;border:1px solid rgba(255,255,255,.28);background:linear-gradient(135deg,#00bfff,#00ffd5);color:#003b74;font-size:22px;box-shadow:0 8px 20px rgba(0,0,0,.22);cursor:pointer;transition:transform .15s ease,opacity .15s ease}
+  .send:disabled{opacity:.6;cursor:not-allowed}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded',()=>{
+  const box=document.getElementById('chat-box'),
+        input=document.getElementById('userInput'),
+        btn=document.getElementById('sendBtn');
+  if(!box||!input||!btn)return;
+
+  // Загружаем историю чата с сервера
+  fetch('/api/history')
+    .then(r=>r.json())
+    .then(hist=>{ for(const m of hist) addMsg(m.text,m.role); });
+
+  input.addEventListener('keydown',e=>{
+    if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send();}
+  });
+  btn.addEventListener('click',send);
+
+  let busy=false;
+  function send(){
+    if(busy)return;
+    const q=(input.value||'').trim();
+    if(!q)return;
+    busy=true;btn.disabled=true;
+    addMsg(q,'user');saveMsg(q,'user');input.value='';
+    const typing=addTyping();
+
+    fetch('/api/assistant',{
+      method:'POST',
+      headers:{'Content-Type':'application/json;charset=utf-8'},
+      body:JSON.stringify({question:q})
+    })
+    .then(r=>r.json())
+    .then(d=>{
+      typing.remove();
+      const ans=(d&&d.answer)||'Готово.';
+      addMsg(ans,'bot');saveMsg(ans,'bot');
+    })
+    .catch(()=>{typing.remove();addMsg('❗ Ошибка соединения.','bot');})
+    .finally(()=>{busy=false;btn.disabled=false;});
+  }
+
+  function addTyping(){
+    const w=document.createElement('div');
+    w.className='msg';
+    w.innerHTML='<span class="typing">Бот печатает&nbsp;<span class="dot"></span><span class="dot"></span><span class="dot"></span></span>';
+    box.appendChild(w);box.scrollTop=box.scrollHeight;return w;
+  }
+  function addMsg(t,role){
+    const d=document.createElement('div');
+    d.className='msg'+(role==='user'?' user':'');
+    d.innerHTML=escapeHTML(t);
+    box.appendChild(d);box.scrollTop=box.scrollHeight;
+  }
+  function saveMsg(text,role){
+    fetch('/api/history',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({message:text,role})
+    });
+  }
+  function escapeHTML(s){
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br/>');
+  }
+});
+</script>
+{% endblock %}

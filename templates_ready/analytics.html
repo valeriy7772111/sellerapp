@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}📊 Аналитика и графики — SellerApp Pro{% endblock %}
+
+{% block content %}
+<img id="logoGlow" src="{{ url_for('static', filename='logo.svg') }}"
+     alt="SellerApp Analytics"
+     style="width:80px;height:80px;margin:25px auto 10px;display:block;filter:drop-shadow(0 0 10px rgba(0,255,255,0.4));" />
+
+  <h1>📊 Аналитика и графики</h1>
+  <p>Динамика продаж за последние 7 дней</p>
+
+  <div class="chart-card" style="max-width:520px;margin:0 auto;">
+    <canvas id="analyticsChart"></canvas>
+  </div>
+
+  <button class="btn" onclick="window.location.href='/'">← На главную</button>
+{% endblock %}
+
+{% block scripts %}
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    const ctx = document.getElementById('analyticsChart').getContext('2d');
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: ['Пн','Вт','Ср','Чт','Пт','Сб','Вс'],
+        datasets: [{
+          label: 'Продажи, шт.',
+          data: [45, 55, 60, 70, 90, 85, 65],
+          borderColor: '#00ffcc',
+          backgroundColor: 'rgba(0,255,204,0.25)',
+          borderWidth: 2,
+          fill: true,
+          tension: 0.35,
+          pointRadius: 5,
+          pointBackgroundColor: '#fff',
+          pointBorderColor: '#00ffcc',
+          pointHoverRadius: 7
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        aspectRatio: 1.6,
+        layout: { padding: 10 },
+        plugins: {
+          legend: {
+            labels: { color: '#fff', font: { size: 14 } }
+          }
+        },
+        scales: {
+          x: {
+            ticks: { color: '#fff' },
+            grid: { display: false }
+          },
+          y: {
+            beginAtZero: true,
+            ticks: { color: '#fff' },
+            grid: { color: 'rgba(255,255,255,0.15)' }
+          }
+        }
+      }
+    });
+  </script>
+{% endblock %}

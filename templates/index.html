@@ -1,0 +1,229 @@
+{% extends "base.html" %}
+
+{% block title %}🏠 Главная — SellerApp Pro{% endblock %}
+
+{% block content %}
+
+<!-- === ЛОГО === -->
+<div style="text-align:center;margin-top:80px;">
+  <img src="{{ url_for('static', filename='logo.svg') }}"
+       alt="SellerApp Pro"
+       style="width:96px;height:96px;margin-bottom:14px;
+              filter:drop-shadow(0 -2px 14px rgba(0,255,255,0.6))
+                     drop-shadow(0 0 10px rgba(0,255,255,0.8));
+              animation:neonPulse 3s ease-in-out infinite;">
+</div>
+
+<!-- === ГЛАВНЫЙ ЭКРАН === -->
+<h1 class="gradient-title"
+ style="text-align:center;
+ margin-top:6px;
+ background:linear-gradient(90deg,#00fff7,#00aaff);
+ -webkit-background-clip:text;
+ -webkit-text-fill-color:transparent;
+ text-shadow:0 0 10px rgba(0,255,255,0.25);">
+  SellerApp Pro
+</h1>
+<p style="margin-top:6px;font-size:17px;opacity:0.9;text-align:center;">
+  Подключите магазин или включите демо-режим.
+</p>
+
+<!-- === КНОПКИ === -->
+<div id="start-buttons" style="display:flex;flex-direction:column;align-items:center;margin-top:20px;">
+  <button onclick="goTo('/connect')" style="width:80%;max-width:360px;margin-bottom:16px;padding:16px;
+  border:none;border-radius:14px;font-size:18px;font-weight:600;color:#fff;
+  background:linear-gradient(90deg,#00c6c3,#5af1e6);box-shadow:0 4px 14px rgba(0,198,195,0.3);cursor:pointer;">
+    🔗 Подключить магазин
+  </button>
+
+  <button onclick="showDemo()" style="width:80%;max-width:360px;padding:16px;
+  border:none;border-radius:14px;font-size:18px;font-weight:600;color:#fff;
+  background:linear-gradient(90deg,#007bff,#0056d6);box-shadow:0 4px 14px rgba(0,91,255,0.35);cursor:pointer;">
+    👀 Посмотреть демо
+</button>
+
+  <button onclick="goTo('/dashboard')" 
+        style="width:80%;max-width:360px;
+               margin-top:14px;
+               border:none;border-radius:14px;
+               font-size:18px;font-weight:600;
+               color:#00344f;
+               background:linear-gradient(90deg,#00ffd5,#00bff3);
+               box-shadow:0 4px 9px rgba(0,255,255,0.25);
+               padding:14px 0;cursor:pointer;
+               transition:transform .2s ease, box-shadow .2s ease;">
+  📊 Перейти в панель продавца
+</button>
+<button class="main-btn" onclick="goTo('/test')">🧪 Тестовая зона</button>
+</div>
+
+<!-- === СТАТИСТИКА === -->
+<div id="demo-stats" style="margin-top:40px;
+  display:grid;grid-template-columns:repeat(2,1fr);gap:18px;
+  background:rgba(255,255,255,0.08);backdrop-filter:blur(10px);
+  border-radius:20px;padding:22px 18px;text-align:center;
+  box-shadow:0 8px 24px rgba(0,0,0,0.25);max-width:500px;margin-left:auto;margin-right:auto;">
+  
+  <div class="stat">
+    <div class="value" style="font-size:22px;font-weight:700;
+      background:linear-gradient(90deg,#00fff7,#00aaff);
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;">
+      ₽ 248 900
+    </div>
+    <div class="label" style="opacity:0.85;font-size:14px;">Оборот за 7 дней</div>
+  </div>
+
+  <div class="stat">
+    <div class="value" style="font-size:22px;font-weight:700;
+      background:linear-gradient(90deg,#00fff7,#00aaff);
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;">
+      312
+    </div>
+    <div class="label" style="opacity:0.85;font-size:14px;">Товаров на складе</div>
+  </div>
+
+  <div class="stat">
+    <div class="value" style="font-size:22px;font-weight:700;
+      background:linear-gradient(90deg,#00fff7,#00aaff);
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;">
+      ⭐ 4.87
+    </div>
+    <div class="label" style="opacity:0.85;font-size:14px;">Средний рейтинг</div>
+  </div>
+
+  <div class="stat">
+    <div class="value" style="font-size:22px;font-weight:700;
+      background:linear-gradient(90deg,#00fff7,#00aaff);
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;">
+      42
+    </div>
+    <div class="label" style="opacity:0.85;font-size:14px;">Активные заказы</div>
+  </div>
+</div>
+
+<!-- === КОНКУРЕНТЫ / ИНДЕКС === -->
+<div class="compete-card" style="
+  margin:28px auto 0; max-width:680px;
+  background:linear-gradient(135deg,rgba(255,255,255,.06),rgba(255,255,255,.02));
+  border:1px solid rgba(255,255,255,.18);
+  border-radius:22px; padding:18px 16px; text-align:center;
+  backdrop-filter:blur(10px);
+  box-shadow:0 10px 26px rgba(0,0,0,.22);">
+
+  <div style="font-size:18px;opacity:.95;margin-bottom:8px;">Сравнение с конкурентами</div>
+
+  <div class="compete-grid" style="
+    display:grid; gap:12px; grid-template-columns:1.3fr 1fr 1fr;
+  ">
+    <!-- Индекс общий -->
+    <div class="tile" style="
+      grid-row:span 2; border-radius:18px; padding:14px;
+      background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.12);">
+      <div style="opacity:.85; font-size:13px;">Индекс конкурентоспособности</div>
+      <div id="cc-score" style="
+        font-weight:800; font-size:44px; line-height:1.05; margin:6px 0 2px;
+        background:linear-gradient(90deg,#00fff7,#00aaff);
+        -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+        text-shadow:0 0 12px rgba(0,255,255,.25);">82</div>
+      <div id="cc-badge" style="font-size:13px; opacity:.9;">Сильнее 78% в нише</div>
+    </div>
+
+    <!-- Цена -->
+    <div class="tile" style="border-radius:18px; padding:12px;
+      background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.12);">
+      <div style="opacity:.85; font-size:13px;">Цена vs рынок</div>
+      <div id="cc-price" style="font-size:22px; font-weight:700; margin-top:4px;">–7%</div>
+    </div>
+
+    <!-- Рейтинг -->
+    <div class="tile" style="border-radius:18px; padding:12px;
+      background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.12);">
+      <div style="opacity:.85; font-size:13px;">Рейтинг</div>
+      <div style="font-size:22px; font-weight:700; margin-top:4px;">
+        <span id="cc-rating">4.87</span> ★
+      </div>
+    </div>
+
+    <!-- Скорость продаж -->
+    <div class="tile" style="border-radius:18px; padding:12px;
+      background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.12);">
+      <div style="opacity:.85; font-size:13px;">Скорость продаж</div>
+      <div id="cc-velocity" style="font-size:22px; font-weight:700; margin-top:4px;">1.35×</div>
+    </div>
+
+    <!-- Доля рекламы -->
+    <div class="tile" style="border-radius:18px; padding:12px;
+      background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.12);">
+      <div style="opacity:.85; font-size:13px;">Доля рекламы</div>
+      <div id="cc-adshare" style="font-size:22px; font-weight:700; margin-top:4px;">21%</div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* Demo-данные (подменим реальными позже из /api/compete?sku=...) */
+const C = {
+  price_gap: -0.07,       // твоя цена против средней по нише, -7% = дешевле
+  rating: 4.87,           // твой рейтинг
+  rating_avg: 4.60,       // средний рейтинг ниши
+  velocity: 1.35,         // скорость продаж относительно ниши ( >1 — быстрее )
+  ad_share: 0.21,         // доля затрат на рекламу от выручки
+  stockouts: 0.05         // % дней с Out of Stock за период
+};
+
+/* Нормализации → 0..100 */
+const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+
+function scorePrice(gap){ // лучше, когда чуть ниже рынка, но без демпинга
+  // -20% → 90 баллов, 0 → 70, +20% → 30
+  const x = clamp(gap, -0.25, 0.25);
+  return Math.round(80 - (x*100)*1.0 + (x<0?10:0)); // бонус за лёгкую дешевизну
+}
+function scoreRating(r, rAvg){
+  const diff = clamp(r - rAvg, -1.0, 1.0); // -1..+1
+  return Math.round(60 + diff*30 + (r>=4.8?10:0)); // потолок 100
+}
+function scoreVelocity(v){ // 0.6x → 30, 1.0x → 70, 1.6x → 95
+Uni  const x = clamp(v, 0.5, 1.8);
+  return Math.round(40 + (x-0.5)/(1.3)*55); 
+}
+function scoreAdShare(s){ // меньше — лучше. 12% → 85, 25% → 55
+  const x = clamp(s, 0.05, 0.35);
+  return Math.round(95 - (x-0.05)/(0.30)*50);
+}
+function scoreStockouts(p){ // 0% → 95, 15% → 40
+  const x = clamp(p, 0, 0.2);
+  return Math.round(95 - (x/0.2)*55);
+}
+
+/* Веса уровня 3 */
+const W = {price:25, rating:25, velocity:30, ad:10, stock:10};
+
+const S = {
+  price:   scorePrice(C.price_gap),
+  rating:  scoreRating(C.rating, C.rating_avg),
+  vel:     scoreVelocity(C.velocity),
+  ad:      scoreAdShare(C.ad_share),
+  stock:   scoreStockouts(C.stockouts)
+};
+const index = Math.round(
+  (S.price*W.price + S.rating*W.rating + S.vel*W.velocity + S.ad*W.ad + S.stock*W.stock) /
+  (W.price+W.rating+W.velocity+W.ad+W.stock)
+);
+
+/* Рендер значений */
+document.getElementById('cc-price').textContent   = (C.price_gap>0?'+':'') + Math.round(C.price_gap*100) + '%';
+document.getElementById('cc-rating').textContent  = C.rating.toFixed(2);
+document.getElementById('cc-velocity').textContent= C.velocity.toFixed(2)+'×';
+document.getElementById('cc-adshare').textContent = Math.round(C.ad_share*100)+'%';
+document.getElementById('cc-score').textContent   = index;
+
+/* Бейдж – насколько сильнее рынка (грубая оценка) */
+const badge = document.getElementById('cc-badge');
+let msg = 'На уровне ниши';
+if(index>=85) msg = 'Сильнее 90% в нише';
+else if(index>=75) msg = 'Сильнее ~75% в нише';
+else if(index<=55) msg = 'Ниже среднего';
+badge.textContent = msg;
+</script>
+{% endblock %}

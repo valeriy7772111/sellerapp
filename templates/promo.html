@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>
+  {% if page == "stocks" %}📦 Остатки и продажи
+  {% elif page == "analytics" %}📊 Аналитика и графики
+  {% elif page == "forecast" %}🧠 Прогноз спроса
+  {% elif page == "settings" %}⚙️ Настройки
+  {% elif page == "promo" %}💰 Реклама и продвижение
+  {% else %}📈 Страница загрузилась
+  {% endif %}
+</h2>
+<p>Контент страницы <b>{{ page or 'index' }}</b> загружен через AJAX.</p>
+{% endblock %}

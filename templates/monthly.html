@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>📅 Динамика продаж за месяц</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: "Segoe UI", sans-serif;
+      background: #f5f7fb;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 30px;
+      color: #222;
+    }
+    .card {
+      background: #fff;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08);
+      max-width: 900px;
+      width: 100%;
+      text-align: center;
+    }
+    h1 {
+      color: #007bff;
+      margin-bottom: 20px;
+    }
+    a.back {
+      display: inline-block;
+      margin-top: 25px;
+      background: #007bff;
+      color: #fff;
+      text-decoration: none;
+      padding: 10px 20px;
+      border-radius: 10px;
+      transition: 0.3s;
+    }
+    a.back:hover {
+      background: #0056b3;
+    }
+    canvas {
+      margin-top: 25px;
+      max-width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>📅 Динамика продаж за месяц</h1>
+    <p>Показатели продаж за последние 30 дней</p>
+
+    <canvas id="monthChart"></canvas>
+
+  </div>
+
+  <script>
+    const labels = {{ data | map(attribute='day') | list | tojson }};
+    const values = {{ data | map(attribute='sales') | list | tojson }};
+
+    const ctx = document.getElementById('monthChart').getContext('2d');
+    const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+    gradient.addColorStop(0, 'rgba(0, 123, 255, 0.4)');
+    gradient.addColorStop(1, 'rgba(0, 123, 255, 0)');
+
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'Продажи (шт.)',
+          data: values,
+          fill: true,
+          backgroundColor: gradient,
+          borderColor: '#007bff',
+          borderWidth: 2,
+          pointBackgroundColor: '#007bff',
+          pointRadius: 0,
+          pointHoverRadius: 6,
+          tension: 0.3
+        }]
+      },
+      options: {
+        responsive: true,
+        animation: { duration: 1200, easing: 'easeOutQuart' },
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: 'rgba(0,0,0,0.7)',
+            titleColor: '#fff',
+            bodyColor: '#fff'
+          }
+        },
+        scales: {
+          y: { beginAtZero: true, grid: { color: '#eee' } },
+          x: { grid: { display: false } }
+        }
+      }
+    });
+  </script>
+{% include "partials/footer.html" %}
+{% include "partials/settings_modal.html" %}
+</body>
+</html>

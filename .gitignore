@@ -1,0 +1,11 @@
+venv/
+__pycache__/
+*.pyc
+logs/
+flask_session/
+data/
+*.log
+*.tar.gz
+*.bak*
+.env
+.sellerpay.env

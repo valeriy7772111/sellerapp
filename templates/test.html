@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+
+{% block title %}🏠 Главная — SellerApp Pro{% endblock %}
+
+{% block content %}
+  <!-- ЛОГО -->
+  <img id="logoGlow" 
+       src="{{ url_for('static', filename='logo.svg') }}"
+       alt="SellerApp Pro"
+       style="width:96px;height:96px;margin:36px auto 10px;display:block;
+              filter:drop-shadow(0 0 12px rgba(0,255,255,0.4));
+              animation:softPulse 3s ease-in-out infinite;opacity:0.95;" />
+
+  <h1 class="gradient-title">SellerApp Pro</h1>
+  <p>Аналитика и управление для Ozon · WB · Я.Маркета</p>
+
+  <!-- КНОПКИ -->
+  <div class="main-buttons">
+    <button class="main-btn" onclick="goTo('/connect')">🔗 Подключить магазин</button>
+    <button class="main-btn" onclick="showDemo()">👀 Посмотреть демо</button>
+    <button class="main-btn" onclick="goTo('/panel')">📊 Перейти в панель продавца</button>
+  </div>
+
+  <!-- СТАТИСТИКА -->
+  <div class="stats-card">
+    <div class="stat"><div class="value">₽ 248 900</div><div class="label">Оборот за 7 дней</div></div>
+    <div class="stat"><div class="value">312</div><div class="label">Товаров на складе</div></div>
+    <div class="stat"><div class="value">⭐ 4.87</div><div class="label">Средний рейтинг</div></div>
+    <div class="stat"><div class="value">42</div><div class="label">Активные заказы</div></div>
+  </div>
+
+  <!-- СРАВНЕНИЕ С КОНКУРЕНТАМИ -->
+  <div class="stats-card" style="margin-top:20px;">
+    <div class="stat">
+      <div class="value">₽ 1 290</div>
+      <div class="label">Ваша средняя цена</div>
+    </div>
+    <div class="stat">
+      <div class="value">₽ 1 370</div>
+      <div class="label">Средняя по рынку</div>
+    </div>
+    <div class="stat">
+      <div class="value">⭐ 4.9</div>
+      <div class="label">Ваш рейтинг</div>
+    </div>
+    <div class="stat">
+      <div class="value">⭐ 4.6</div>
+      <div class="label">Рейтинг конкурентов</div>
+    </div>
+  </div>
+
+  <p style="text-align:center;margin-top:16px;opacity:0.8;font-size:13px;">
+  ⚔️ Вы на <b>6 %</b> дешевле рынка и имеете <b>выше рейтинг</b> — сильная позиция против конкурентов.
+  </p>
+{% endblock %}
+
+{% block scripts %}
+<style>
+.gradient-title {
+  font-size: 28px;
+  font-weight: 800;
+  background: linear-gradient(90deg,#00ffd5,#00bfff);
+  -webkit-background-clip: text;
+  color: transparent;
+  text-shadow: 0 0 12px rgba(0,255,255,0.25);
+  margin: 10px 0 6px;
+  text-align: center;
+}
+.main-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  width: calc(100% - 32px);
+  max-width: 500px;
+  margin: 28px auto 40px;
+}
+.main-btn {
+  width: 100%;
+  font-size: 17px;
+  font-weight: 700;
+  padding: 15px 0;
+  border: none;
+  border-radius: 18px;
+  color: #fff;
+  background: linear-gradient(90deg, rgba(0,255,213,0.25), rgba(0,191,255,0.25));
+  background-size: 200% 200%;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 14px rgba(0,0,0,0.25),
+              0 0 6px rgba(0,255,255,0.25);
+  border: 1px solid rgba(0,255,255,0.35);
+  transition: all .3s ease;
+  animation: pulseGradient 6s ease-in-out infinite;
+}
+.main-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.4),
+              0 0 10px rgba(0,255,255,0.5);
+}
+@keyframes pulseGradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+.stats-card {
+  display: grid;
+  grid-template-columns: repeat(2,1fr);
+  gap: 16px;
+  width: calc(100% - 32px);
+  max-width: 500px;
+  margin: 10px auto 100px;
+  padding: 16px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,0.1);
+  backdrop-filter: blur(6px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+}
+.stat { text-align: center; padding: 6px; }
+.stat .value {
+  font-size: 20px;
+  font-weight: 700;
+  color: #00ffd5;
+  text-shadow: 0 0 6px rgba(0,255,255,0.5);
+}
+.stat .label {
+  font-size: 13px;
+  color: rgba(255,255,255,0.85);
+  margin-top: 4px;
+}
+@keyframes softPulse {
+  0% { transform: scale(1); filter: drop-shadow(0 0 12px rgba(0,255,255,0.4)); }
+  50% { transform: scale(1.05); filter: drop-shadow(0 0 24px rgba(0,255,255,0.8)); }
+  100% { transform: scale(1); filter: drop-shadow(0 0 12px rgba(0,255,255,0.4)); }
+}
+</style>
+{% endblock %}

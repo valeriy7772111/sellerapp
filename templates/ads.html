@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}🚀 Реклама и продвижение — SellerApp Pro{% endblock %}
+
+{% block content %}
+  <!-- ЛОГО -->
+  <img id="logoGlow" src="{{ url_for('static', filename='logo.svg') }}"
+       alt="SellerApp Pro"
+       style="width:84px;height:84px;margin:24px auto 8px;display:block;filter:drop-shadow(0 0 12px rgba(0,255,255,0.45));opacity:0.9;" />
+
+  <h1>🚀 Реклама и продвижение</h1>
+  <p>Инструменты роста и аналитика эффективности</p>
+
+  <!-- КАРТОЧКИ -->
+  <div class="ads-card">
+    <div class="block">
+      <h2>📊 Аналитика кампаний</h2>
+      <p>Следите за CTR, конверсией и ROI каждой рекламной активности. Данные обновляются ежедневно.</p>
+    </div>
+
+    <div class="block">
+      <h2>🎯 Рекомендации AI</h2>
+      <p>Искусственный интеллект анализирует эффективность и предлагает оптимальные ставки и ключевые слова.</p>
+    </div>
+
+    <div class="block">
+      <h2>💰 Бюджет и эффективность</h2>
+      <p>Управляйте бюджетом по каналам: Ozon, Wildberries, Яндекс.Маркет, Telegram Ads и др.</p>
+    </div>
+  </div>
+
+  <!-- КНОПКИ -->
+  <div class="btn-row">
+  </div>
+{% endblock %}
+
+{% block scripts %}
+<style>
+  .ads-card{
+    max-width: 700px;
+    margin: 18px auto;
+    padding: 20px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 16px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+    backdrop-filter: blur(5px);
+  }
+  .block{
+    margin-bottom: 22px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .block:last-child{ border-bottom:none; margin-bottom:0; }
+  .block h2{
+    font-size: 18px;
+    color:#00ffd5;
+    margin-bottom: 6px;
+  }
+  .block p{ color:#fff; opacity:0.9; font-size:15px; line-height:1.5; }
+  .btn-row{ display:flex; justify-content:center; margin:24px 0 12px; }
+</style>
+{% endblock %}

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Поставки — SellerApp Pro</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      background: linear-gradient(135deg, #003b74, #00c6c3);
+      color: #fff;
+      margin: 0;
+      padding: 0 8px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    h1 {
+      margin: 22px 0 8px;
+      font-size: 24px;
+      line-height: 1.2;
+      text-align: center;
+      background: linear-gradient(90deg, #00fff0, #00c6ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .block {
+      width: 100%;
+      max-width: 650px;
+      margin: 15px 0;
+    }
+    .block h2 {
+      margin: 0 0 8px;
+      font-size: 19px;
+      letter-spacing: 0.3px;
+    }
+    .wb h2 { color: #b74aff; }
+    .ozon h2 { color: #00aaff; }
+    .yandex h2 { color: #ffcc00; }
+
+    .table-wrap {
+      background: rgba(255,255,255,0.1);
+      border-radius: 8px;
+      overflow-x: auto;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+      min-width: 420px;
+    }
+    th, td {
+      padding: 6px 8px;
+      text-align: left;
+      white-space: nowrap;
+    }
+    th {
+      background: rgba(255,255,255,0.25);
+      font-weight: 600;
+    }
+    tr:nth-child(even) {
+      background: rgba(255,255,255,0.07);
+    }
+    .dt { white-space: normal; }
+    .small {
+      font-size: 12px;
+      opacity: 0.85;
+      display: block;
+      margin-top: 2px;
+    }
+
+    /* рамки по маркетплейсам */
+    .wb .table-wrap { border: 1px solid #b74aff; }
+    .ozon .table-wrap { border: 1px solid #00aaff; }
+    .yandex .table-wrap { border: 1px solid #ffcc00; }
+
+    /* бейджи статусов */
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #fff;
+    }
+    .await { background: rgba(255, 200, 0, 0.75); }
+    .shipped { background: rgba(0, 200, 100, 0.8); }
+
+    /* кнопка с анимированным градиентом */
+    .back-btn {
+      display: inline-block;
+      margin: 25px auto 10px;
+      padding: 10px 28px;
+      border-radius: 10px;
+      background: linear-gradient(90deg, #00c6ff, #00fff0, #00c6ff);
+      background-size: 200% 200%;
+      animation: moveGradient 5s ease infinite;
+      color: #fff;
+      font-weight: 600;
+      font-size: 15px;
+      text-decoration: none;
+      border: none;
+      box-shadow: 0 0 10px rgba(0, 255, 240, 0.5);
+      transition: transform 0.2s ease;
+    }
+    @keyframes moveGradient {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    .back-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 15px rgba(0, 255, 240, 0.7);
+    }
+
+    footer {
+      margin-top: auto;
+      padding: 18px;
+      font-size: 13px;
+      opacity: 0.7;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <h1>Поставки</h1>
+  <div id="tables"></div>
+
+
+
+  <script>
+    async function loadSupplies() {
+      const r = await fetch("/api/user");
+      const data = await r.json();
+      const container = document.getElementById("tables");
+      if (!data.marketplaces) {
+        container.innerHTML = "<p>Нет данных о маркетплейсах.</p>";
+        return;
+      }
+
+      const now = new Date();
+      const today = now.toLocaleDateString("ru-RU");
+      const timeNow = now.toLocaleTimeString("ru-RU", { hour: "2-digit", minute: "2-digit" });
+
+      const intervals = {
+        WB: "08:00–08:30",
+        OZON: "09:00–10:00",
+        YANDEX: "10:00–12:00"
+      };
+
+      data.marketplaces.forEach(m => {
+        const block = document.createElement("div");
+        block.className = "block " + (m === "WB" ? "wb" : m === "OZON" ? "ozon" : "yandex");
+
+        const h2 = document.createElement("h2");
+        h2.textContent = "Поставки " + m;
+        block.appendChild(h2);
+
+        const wrap = document.createElement("div");
+        wrap.className = "table-wrap";
+
+        const tbl = document.createElement("table");
+        tbl.innerHTML = `
+          <tr>
+            <th>Дата/время</th>
+            <th>Товар</th>
+            <th>Кол-во</th>
+            <th>Статус</th>
+          </tr>
+          <tr>
+            <td class="dt">${today}<br><span class="small">${timeNow} (${intervals[m]})</span></td>
+            <td>Пример ${m}</td>
+            <td>50</td>
+            <td><span class="badge await">Ожидает</span></td>
+          </tr>
+          <tr>
+            <td class="dt">${today}<br><span class="small">09:30 (${intervals[m]})</span></td>
+            <td>Тест ${m}</td>
+            <td>30</td>
+            <td><span class="badge shipped">Отгружено</span></td>
+          </tr>
+        `;
+        wrap.appendChild(tbl);
+        block.appendChild(wrap);
+        container.appendChild(block);
+      });
+    }
+    loadSupplies();
+  </script>
+<style id="btn-anim">
+@keyframes buttonFadeIn { from { opacity:0; transform: translateY(10px); } to { opacity:1; transform: translateY(0); } }
+.button { animation: buttonFadeIn 0.8s ease both; }
+</style>
+{% include "partials/footer.html" %}
+{% include "partials/settings_modal.html" %}
+</body>
+</html>

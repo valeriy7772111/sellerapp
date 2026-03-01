@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block title %}📦 Остатки и продажи — SellerApp Pro{% endblock %}
+
+{% block content %}
+  <img id="logoGlow" src="{{ url_for('static', filename='logo.svg') }}"
+       alt="SellerApp Stocks"
+       style="width:80px;height:80px;margin:25px auto 10px;display:block;filter:drop-shadow(0 0 10px rgba(0,255,255,0.4));" />
+
+  <h1>📦 Остатки и продажи</h1>
+  <p>Актуальные данные по продажам и остаткам за последние 14 дней</p>
+
+  <div class="chart-card" style="max-width:520px;margin:0 auto;">
+    <canvas id="stocksChart"></canvas>
+  </div>
+
+  <button class="btn" onclick="window.location.href='/'">← На главную</button>
+{% endblock %}
+
+{% block scripts %}
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    const ctx = document.getElementById('stocksChart').getContext('2d');
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['Пн','Вт','Ср','Чт','Пт','Сб','Вс'],
+        datasets: [
+          {
+            label: 'Продажи, шт.',
+            data: [45, 50, 65, 70, 90, 85, 60],
+            backgroundColor: 'rgba(0, 255, 204, 0.6)',
+            borderColor: '#00ffcc',
+            borderWidth: 2,
+            borderRadius: 6
+          },
+          {
+            label: 'Остатки, шт.',
+            data: [200, 180, 160, 150, 140, 130, 125],
+            backgroundColor: 'rgba(255, 170, 0, 0.5)',
+            borderColor: '#ffaa00',
+            borderWidth: 2,
+            borderRadius: 6
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        aspectRatio: 1.6,
+        layout: { padding: 10 },
+        plugins: {
+          legend: {
+            labels: { color: '#fff', font: { size: 14 } }
+          }
+        },
+        scales: {
+          x: {
+            ticks: { color: '#fff' },
+            grid: { display: false }
+          },
+          y: {
+            beginAtZero: true,
+            ticks: { color: '#fff' },
+            grid: { color: 'rgba(255,255,255,0.15)' }
+          }
+        }
+      }
+    });
+  </script>
+{% endblock %}

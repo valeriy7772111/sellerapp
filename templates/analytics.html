@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}📊 Аналитика Wildberries — SellerApp Pro{% endblock %}
+
+{% block content %}
+  <img src="{{ url_for('static', filename='logo.svg') }}"
+       alt="SellerApp"
+       style="width:84px;height:84px;margin:24px auto 8px;display:block;filter:drop-shadow(0 0 10px rgba(0,255,255,0.35));" />
+
+  <h1 style="text-align:center;margin-bottom:24px;">📊 Аналитика продаж Wildberries</h1>
+
+  <div class="analytics-card" id="analytics"></div>
+{% endblock %}
+
+{% block scripts %}
+<style>
+  .analytics-card {
+    width:100%;max-width:720px;margin:20px auto 40px;
+    background:rgba(255,255,255,0.06);border-radius:16px;
+    border:1px solid rgba(255,255,255,0.1);
+    backdrop-filter:blur(10px);padding:18px;
+    box-shadow:0 6px 20px rgba(0,0,0,0.25);
+  }
+  table { width:100%;border-collapse:collapse;color:#fff; }
+  th,td { padding:10px 8px;text-align:left;border-bottom:1px solid rgba(255,255,255,0.07); }
+  th { font-weight:700;color:rgba(255,255,255,0.9);font-size:14px; }
+  td:first-child { white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:240px; }
+  .ads-btn {
+    padding:6px 12px;border-radius:10px;font-weight:600;text-decoration:none;
+    background:rgba(0,255,200,0.2);color:#00ffd0;transition:all .2s ease;
+  }
+  .ads-btn.active { background:rgba(0,255,200,0.4);color:#003b74; }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+  const box = document.getElementById('analytics');
+  const res = await fetch('/analytics_data');
+  const data = await res.json();
+
+  let html = '<table><tr><th>Товар</th><th>Цена</th><th>Остаток</th><th>Продажи</th><th>Реклама</th></tr>';
+  for (const p of data) {
+    html += `<tr>
+      <td title="${p.name}">${p.name}</td>
+      <td>${p.price} ₽</td>
+      <td>${p.stock} шт.</td>
+      <td>${p.sales}</td>
+      <td><a href="#" class="ads-btn ${p.ads==='Активна'?'active':''}">${p.ads}</a></td>
+    </tr>`;
+  }
+  html += '</table>';
+  box.innerHTML = html;
+});
+</script>
+{% endblock %}

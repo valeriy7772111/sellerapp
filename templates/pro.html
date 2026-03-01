@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block title %}💎 PRO-доступ — SellerApp Pro{% endblock %}
+
+{% block content %}
+  <div style="margin-top:40px;text-align:center;">
+    <h1 style="
+      font-size:28px;
+      background:linear-gradient(90deg,#00ffd5,#00bfff);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      text-shadow:0 0 12px rgba(0,255,255,0.3);">
+      Преимущества PRO-доступа
+    </h1>
+    <p style="opacity:.9;margin-top:8px;">Расширьте возможности аналитики и ассистента.</p>
+
+    <div class="pro-cards">
+      <div class="pro-card">
+        <h2>🔹 Бесплатный</h2>
+        <ul>
+          <li>До 10 запросов в день</li>
+          <li>Доступ к базовой аналитике</li>
+          <li>Прогноз спроса</li>
+        </ul>
+        <button class="btn" disabled>Активен</button>
+      </div>
+
+      <div class="pro-card">
+        <h2>💎 PRO</h2>
+        <ul>
+          <li>Безлимитные запросы к AI</li>
+          <li>Доступ ко всем разделам</li>
+          <li>Приоритетная обработка данных</li>
+        </ul>
+<p style="margin-top:18px;color:rgba(255,255,255,0.8);font-size:15px;">
+  💳 Оплата защищена через Telegram (СБП)
+</p>
+
+<a href="https://t.me/SellerAppPayBot"
+   target="_blank"
+   class="btn"
+   style="text-decoration:none;">
+  💳 Перейти на PRO — 799 ₽/мес
+</a>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    .pro-cards{
+      display:flex;
+      flex-direction:column;
+      gap:20px;
+      align-items:center;
+      justify-content:center;
+      margin:40px auto 60px;
+      width:calc(100% - 40px);
+      max-width:520px;
+    }
+    .pro-card{
+      background:rgba(255,255,255,0.08);
+      border:1px solid rgba(255,255,255,0.15);
+      border-radius:18px;
+      padding:24px 20px;
+      width:100%;
+      text-align:center;
+      backdrop-filter:blur(8px);
+      box-shadow:0 6px 20px rgba(0,0,0,0.25);
+    }
+    .pro-card h2{margin-bottom:10px}
+    .pro-card ul{list-style:none;padding:0;margin:0 0 18px 0}
+    .pro-card li{margin:6px 0;font-size:14px;opacity:.9}
+  </style>
+{% endblock %}

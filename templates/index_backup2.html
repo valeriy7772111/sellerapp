@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SellerApp Pro — Панель продавца</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const tg = window.Telegram.WebApp;
+    tg.expand();
+    const initData = tg.initDataUnsafe;
+
+    if (initData && initData.user) {
+      fetch("/auth", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(initData)
+      });
+    }
+  });
+  </script>
+
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body {
+      font-family: "Segoe UI", system-ui, sans-serif;
+      color: #fff;
+      background: linear-gradient(135deg, #003b74, #00c6c3);
+      background-size: 200% 200%;
+      animation: gradientMove 10s ease infinite;
+      overflow-x: hidden;
+    }
+    @keyframes gradientMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* Страница как колонка: контент растягивается, футер внизу */
+    .page { min-height: 100vh; display: flex; flex-direction: column; }
+
+    /* Прелоадер */
+    #loader {
+      position: fixed; inset: 0;
+      background: linear-gradient(135deg, #003b74, #00c6c3);
+      display: flex; flex-direction: column; justify-content: center; align-items: center;
+      z-index: 999;
+    }
+    .loader-logo { width: 90px; height: 90px; filter: drop-shadow(0 0 25px rgba(0,255,255,0.8)); animation: pulse 2s infinite ease-in-out; }
+    @keyframes pulse { 0%,100%{transform:scale(1);opacity:1} 50%{transform:scale(1.08);opacity:.85} }
+    #progress { margin-top: 10px; font-size: 15px; opacity: .8; }
+
+    /* Контент по центру, с безопасным нижним отступом под футер */
+    .content {
+      flex: 1; /* тянется, чтобы футер ушёл вниз */
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center;
+      padding: 20px 16px 80px; /* 80px – запас под футер */
+      opacity: 0; transform: translateY(15px);
+      animation: showContent 1s forwards ease; animation-delay: 3s;
+    }
+    @keyframes showContent { to { opacity: 1; transform: translateY(0); } }
+
+    .logo {
+      width: 90px; height: 90px; margin-bottom: 15px;
+      filter: drop-shadow(0 0 15px rgba(0,255,255,0.6));
+      animation: float 4s ease-in-out infinite, glow 5s ease-in-out infinite;
+    }
+    @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
+    @keyframes glow { 0%,100%{filter:drop-shadow(0 0 10px rgba(0,255,255,0.5))} 50%{filter:drop-shadow(0 0 18px rgba(0,255,255,0.9))} }
+
+    h1 {
+      font-size: 32px;
+      background: linear-gradient(90deg, #00fff0, #00c6ff);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      font-weight: 700; margin: 0;
+    }
+    p.subtitle { font-size: 16px; opacity: .85; margin: 10px 0 25px; }
+
+    .button {
+      display: block; width: 340px; max-width: 92vw;
+      padding: 14px 0; margin: 8px auto;
+      font-size: 17px; font-weight: 600; border-radius: 14px; color: #fff;
+      background: rgba(255,255,255,0.15); backdrop-filter: blur(12px);
+      text-decoration: none; box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+      transition: all .3s ease;
+    }
+    .button:hover { background: rgba(255,255,255,0.3); transform: translateY(-2px); }
+
+    /* Футер больше НЕ fixed и НЕ absolute — он естественно внизу */
+    footer {
+      text-align: center; font-size: 13px; opacity: .8;
+      padding: 12px 10px 18px; /* нижний паддинг, чтобы не прилипал к краю экрана */
+    }
+    footer a { color: #fff; text-decoration: none; }
+  </style>
+</head>
+<body>
+  <div id="loader">
+    <img src="/static/logo.svg" class="loader-logo" alt="SellerApp Logo">
+    <span>Загрузка SellerApp Pro...</span>
+    <div id="progress">0%</div>
+  </div>
+
+  <div class="page">
+    <div class="content" id="main">
+      <img src="/static/logo.svg" alt="SellerApp Logo" class="logo">
+      <h1>SellerApp Pro</h1>
+      <p class="subtitle">Аналитика и управление для Ozon · WB · Я.Маркета</p>
+
+      <a href="/stocks" class="button">📦 Остатки и продажи</a>
+      <a href="/analytics" class="button">📊 Аналитика и графики</a>
+      <a href="/forecast" class="button">🧠 Прогноз спроса</a>
+      <a href="/settings" class="button">⚙️ Настройки</a>
+      <a href="/promo" class="button">💰 Реклама и продвижение</a>
+    </div>
+
+  </div>
+
+  <script>
+    // Прелоадер 3 сек, как было
+    let progress = 0;
+    const progressText = document.getElementById("progress");
+    const loader = document.getElementById("loader");
+    const duration = 3000, interval = 30, step = 100 / (duration / interval);
+    const timer = setInterval(() => {
+      progress += step;
+      if (progress >= 100) {
+        progress = 100;
+        clearInterval(timer);
+        loader.style.opacity = "0";
+        setTimeout(() => loader.style.display = "none", 800);
+      }
+      progressText.textContent = Math.round(progress) + "%";
+    }, interval);
+  </script>
+{% include "partials/footer.html" %}
+{% include "partials/settings_modal.html" %}
+</body>
+</html>
