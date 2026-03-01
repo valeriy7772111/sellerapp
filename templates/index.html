@@ -4,316 +4,145 @@
 
 {% block content %}
 
-<!-- === ЛОГО === -->
-<div style="text-align:center;margin-top:80px;">
-  <img src="{{ url_for('static', filename='logo.svg') }}"
-       alt="SellerApp Pro"
-       style="width:96px;height:96px;margin-bottom:14px;
-              filter:drop-shadow(0 -2px 14px rgba(0,255,255,0.6))
-                     drop-shadow(0 0 10px rgba(0,255,255,0.8));
-              animation:neonPulse 3s ease-in-out infinite;">
-</div>
+<style>
+  .hero{max-width:760px;width:100%;margin:14px auto 0;padding:0 10px;}
+  .brand{display:flex;flex-direction:column;align-items:center;gap:10px;margin-top:14px}
+  .brand img{width:92px;height:92px;filter:drop-shadow(0 0 18px rgba(0,255,255,.35))}
+  .brand h1{margin:0;font-size:34px;line-height:1.1;font-weight:900;letter-spacing:.2px}
+  .brand h1 span{background:linear-gradient(90deg,#00fff7,#00aaff);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+  .brand p{margin:0;opacity:.9;font-size:16px}
 
-<!-- === AI FEATURES === -->
-<div style="
-margin:40px auto 0;
-max-width:720px;
-background:rgba(255,255,255,.07);
-border-radius:22px;
-padding:22px;
-backdrop-filter:blur(10px);
-box-shadow:0 10px 26px rgba(0,0,0,.25);
-">
-
-<h2 style="margin-bottom:12px;">🤖 AI-аналитик продавца</h2>
-
-<div style="display:grid;gap:12px;text-align:left">
-
-<div>✅ Анализ продаж в реальном времени</div>
-<div>✅ Прогноз спроса и остатков</div>
-<div>✅ Подсказки по цене</div>
-<div>✅ Индекс конкурентоспособности</div>
-<div>✅ Авто-рекомендации по рекламе</div>
-
-</div>
-
-</div>
-
-
-<!-- === ГЛАВНЫЙ ЭКРАН === -->
-<h1 class="gradient-title"
- style="text-align:center;
- margin-top:6px;
- background:linear-gradient(90deg,#00fff7,#00aaff);
- -webkit-background-clip:text;
- -webkit-text-fill-color:transparent;
- text-shadow:0 0 10px rgba(0,255,255,0.25);">
-  SellerApp Pro
-</h1>
-<p style="margin-top:6px;font-size:17px;opacity:0.9;text-align:center;">
-  Подключите магазин или включите демо-режим.
-
-<!-- === AI INSIGHTS (PRODUCT CORE) === -->
-<div id="ai-insights" style="
-  margin:26px auto 0;
-  max-width:720px;
-  text-align:left;
-  background:rgba(255,255,255,.09);
-  border:1px solid rgba(255,255,255,.18);
-  border-radius:22px;
-  padding:18px 16px;
-  backdrop-filter:blur(10px);
-  box-shadow:0 12px 30px rgba(0,0,0,.25);
-">
-  <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;">
-    <div style="font-weight:800;font-size:16px;letter-spacing:.2px;">AI-рекомендации на сегодня</div>
-    <div style="font-size:12px;opacity:.8;">обновлено: <span id="ai-updated">сейчас</span></div>
-  </div>
-
-  <div style="display:grid;gap:10px;">
-    <div style="display:flex;gap:10px;align-items:flex-start;background:rgba(0,0,0,.18);border:1px solid rgba(255,255,255,.10);border-radius:16px;padding:12px 12px;">
-      <div style="font-size:18px;line-height:1;">🔴</div>
-      <div style="flex:1;">
-        <div style="font-weight:700;">Товар “X” закончится через 6 дней</div>
-        <div style="opacity:.85;font-size:13px;margin-top:2px;">Действие: заказать <b>40 шт</b>, чтобы не потерять продажи.</div>
-      </div>
-      <button class="btn" onclick="toast('OK: добавил в план — заказ 40 шт')">В план</button>
-    </div>
-
-    <div style="display:flex;gap:10px;align-items:flex-start;background:rgba(0,0,0,.18);border:1px solid rgba(255,255,255,.10);border-radius:16px;padding:12px 12px;">
-      <div style="font-size:18px;line-height:1;">🟡</div>
-      <div style="flex:1;">
-        <div style="font-weight:700;">Цена выше рынка на 8%</div>
-        <div style="opacity:.85;font-size:13px;margin-top:2px;">Действие: снизить до <b>1 290 ₽</b> для роста конверсии.</div>
-      </div>
-      <button class="btn" onclick="toast('OK: применил — цена 1290 ₽')">Применить</button>
-    </div>
-
-    <div style="display:flex;gap:10px;align-items:flex-start;background:rgba(0,0,0,.18);border:1px solid rgba(255,255,255,.10);border-radius:16px;padding:12px 12px;">
-      <div style="font-size:18px;line-height:1;">🟢</div>
-      <div style="flex:1;">
-        <div style="font-weight:700;">Реклама недокручена</div>
-        <div style="opacity:.85;font-size:13px;margin-top:2px;">Действие: увеличить бюджет на <b>+15%</b> на 3 дня.</div>
-      </div>
-      <button class="btn" onclick="toast('OK: рекомендовано — бюджет +15%')">Ок</button>
-    </div>
-  </div>
-
-  <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:space-between;align-items:center;margin-top:12px;">
-    <div style="font-size:12px;opacity:.8;">Это демо-рекомендации. Дальше подключим реальные данные.</div>
-    <button class="btn" onclick="goTo('/dashboard')">Открыть панель</button>
-  </div>
-</div>
-
-<script>
-(function(){
-  const el = document.getElementById('ai-updated');
-  if(el){
-    const d = new Date();
-    el.textContent = d.toLocaleString('ru-RU',{hour:'2-digit',minute:'2-digit'});
+  .card{
+    margin:16px auto 0;
+    background:linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,255,255,.03));
+    border:1px solid rgba(255,255,255,.16);
+    border-radius:22px;
+    box-shadow:0 14px 34px rgba(0,0,0,.22);
+    backdrop-filter:blur(10px);
+    overflow:hidden;
   }
-})();
-</script>
+  .card-head{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:14px 16px;
+    background:rgba(0,0,0,.18);
+    border-bottom:1px solid rgba(255,255,255,.12);
+    font-weight:800;
+  }
+  .card-head small{opacity:.8;font-weight:600}
+  .rec-list{padding:12px 12px 14px;display:flex;flex-direction:column;gap:10px}
+  .rec{
+    display:flex;gap:12px;align-items:flex-start;
+    padding:12px 12px;
+    border-radius:18px;
+    background:rgba(0,0,0,.18);
+    border:1px solid rgba(255,255,255,.10);
+  }
+  .dot{width:14px;height:14px;border-radius:50%;margin-top:4px;flex:0 0 14px;box-shadow:0 0 14px rgba(0,0,0,.25)}
+  .dot.red{background:#ff4d4f}
+  .dot.yellow{background:#ffd666}
+  .dot.green{background:#52c41a}
 
+  .rec b{display:block;font-size:16px;line-height:1.2;margin-bottom:4px}
+  .rec .muted{opacity:.85;font-size:13px;line-height:1.25}
+  .rec .action{margin-left:auto;align-self:center}
+  .pill{
+    border:none;border-radius:14px;padding:10px 14px;font-weight:800;
+    background:rgba(255,255,255,.10);color:rgba(255,255,255,.92);
+    border:1px solid rgba(255,255,255,.16);
+  }
+  .pill.primary{
+    background:linear-gradient(135deg,#00bfff,#00ffd5);
+    color:#053241;border:0;
+    box-shadow:0 0 18px rgba(0,255,255,.22);
+  }
 
-</p>
+  .cta{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:10px;
+    margin:16px auto 0;
+    max-width:520px;
+  }
+  .cta button{
+    width:100%;
+    border:none;border-radius:18px;
+    padding:16px 14px;
+    font-size:18px;font-weight:900;
+    cursor:pointer;
+    box-shadow:0 12px 28px rgba(0,0,0,.22);
+    transition:transform .15s ease, opacity .15s ease;
+  }
+  .cta button:active{transform:scale(.99);opacity:.95}
+  .btn-connect{background:linear-gradient(90deg,#00c6c3,#5af1e6);color:#07384a}
+  .btn-demo{background:linear-gradient(90deg,#2f7dff,#1553e6);color:#fff}
+  .btn-panel{background:linear-gradient(90deg,#00ffd5,#00bff3);color:#00344f}
 
-<!-- === КНОПКИ === -->
-<div id="start-buttons" style="display:flex;flex-direction:column;align-items:center;margin-top:20px;">
-  <button onclick="goTo('/connect')" style="width:80%;max-width:360px;margin-bottom:16px;padding:16px;
-  border:none;border-radius:14px;font-size:18px;font-weight:600;color:#fff;
-  background:linear-gradient(90deg,#00c6c3,#5af1e6);box-shadow:0 4px 14px rgba(0,198,195,0.3);cursor:pointer;">
-    🔗 Подключить магазин
-  </button>
+  .fine{max-width:520px;margin:10px auto 0;opacity:.8;font-size:13px;line-height:1.25}
+</style>
 
-  <button onclick="showDemo()" style="width:80%;max-width:360px;padding:16px;
-  border:none;border-radius:14px;font-size:18px;font-weight:600;color:#fff;
-  background:linear-gradient(90deg,#007bff,#0056d6);box-shadow:0 4px 14px rgba(0,91,255,0.35);cursor:pointer;">
-    👀 Посмотреть демо
-</button>
+<div class="hero">
 
-  <button onclick="goTo('/dashboard')" 
-        style="width:80%;max-width:360px;
-               margin-top:14px;
-               border:none;border-radius:14px;
-               font-size:18px;font-weight:600;
-               color:#00344f;
-               background:linear-gradient(90deg,#00ffd5,#00bff3);
-               box-shadow:0 4px 9px rgba(0,255,255,0.25);
-               padding:14px 0;cursor:pointer;
-               transition:transform .2s ease, box-shadow .2s ease;">
-  📊 Перейти в панель продавца
-</button>
-<button class="main-btn" onclick="goTo('/test')">🧪 Тестовая зона</button>
-</div>
-
-<!-- === СТАТИСТИКА === -->
-<div id="demo-stats" style="margin-top:40px;
-  display:grid;grid-template-columns:repeat(2,1fr);gap:18px;
-  background:rgba(255,255,255,0.08);backdrop-filter:blur(10px);
-  border-radius:20px;padding:22px 18px;text-align:center;
-  box-shadow:0 8px 24px rgba(0,0,0,0.25);max-width:500px;margin-left:auto;margin-right:auto;">
-  
-  <div class="stat">
-    <div class="value" style="font-size:22px;font-weight:700;
-      background:linear-gradient(90deg,#00fff7,#00aaff);
-      -webkit-background-clip:text;-webkit-text-fill-color:transparent;">
-      ₽ 248 900
-    </div>
-    <div class="label" style="opacity:0.85;font-size:14px;">Оборот за 7 дней</div>
+  <div class="brand">
+    <img src="{{ url_for('static', filename='logo.svg') }}" alt="SellerApp Pro">
+    <h1><span>SellerApp Pro</span></h1>
+    <p>Сегодня для вас — 3 действия, которые дают рост.</p>
   </div>
 
-  <div class="stat">
-    <div class="value" style="font-size:22px;font-weight:700;
-      background:linear-gradient(90deg,#00fff7,#00aaff);
-      -webkit-background-clip:text;-webkit-text-fill-color:transparent;">
-      312
-    </div>
-    <div class="label" style="opacity:0.85;font-size:14px;">Товаров на складе</div>
-  </div>
-
-  <div class="stat">
-    <div class="value" style="font-size:22px;font-weight:700;
-      background:linear-gradient(90deg,#00fff7,#00aaff);
-      -webkit-background-clip:text;-webkit-text-fill-color:transparent;">
-      ⭐ 4.87
-    </div>
-    <div class="label" style="opacity:0.85;font-size:14px;">Средний рейтинг</div>
-  </div>
-
-  <div class="stat">
-    <div class="value" style="font-size:22px;font-weight:700;
-      background:linear-gradient(90deg,#00fff7,#00aaff);
-      -webkit-background-clip:text;-webkit-text-fill-color:transparent;">
-      42
-    </div>
-    <div class="label" style="opacity:0.85;font-size:14px;">Активные заказы</div>
-  </div>
-</div>
-
-<!-- === КОНКУРЕНТЫ / ИНДЕКС === -->
-<div class="compete-card" style="
-  margin:28px auto 0; max-width:680px;
-  background:linear-gradient(135deg,rgba(255,255,255,.06),rgba(255,255,255,.02));
-  border:1px solid rgba(255,255,255,.18);
-  border-radius:22px; padding:18px 16px; text-align:center;
-  backdrop-filter:blur(10px);
-  box-shadow:0 10px 26px rgba(0,0,0,.22);">
-
-  <div style="font-size:18px;opacity:.95;margin-bottom:8px;">Сравнение с конкурентами</div>
-
-  <div class="compete-grid" style="
-    display:grid; gap:12px; grid-template-columns:1.3fr 1fr 1fr;
-  ">
-    <!-- Индекс общий -->
-    <div class="tile" style="
-      grid-row:span 2; border-radius:18px; padding:14px;
-      background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.12);">
-      <div style="opacity:.85; font-size:13px;">Индекс конкурентоспособности</div>
-      <div id="cc-score" style="
-        font-weight:800; font-size:44px; line-height:1.05; margin:6px 0 2px;
-        background:linear-gradient(90deg,#00fff7,#00aaff);
-        -webkit-background-clip:text; -webkit-text-fill-color:transparent;
-        text-shadow:0 0 12px rgba(0,255,255,.25);">82</div>
-      <div id="cc-badge" style="font-size:13px; opacity:.9;">Сильнее 78% в нише</div>
+  <div class="card">
+    <div class="card-head">
+      <div>AI-рекомендации на сегодня</div>
+      <small>обновлено: <span id="rec-updated">21:00</span></small>
     </div>
 
-    <!-- Цена -->
-    <div class="tile" style="border-radius:18px; padding:12px;
-      background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.12);">
-      <div style="opacity:.85; font-size:13px;">Цена vs рынок</div>
-      <div id="cc-price" style="font-size:22px; font-weight:700; margin-top:4px;">–7%</div>
-    </div>
+    <div class="rec-list">
+      <div class="rec">
+        <div class="dot red"></div>
+        <div>
+          <b>Товар “X” закончится через 6 дней</b>
+          <div class="muted">Действие: заказать <b>40 шт</b>, чтобы не потерять продажи.</div>
+        </div>
+        <div class="action"><button class="pill">В план</button></div>
+      </div>
 
-    <!-- Рейтинг -->
-    <div class="tile" style="border-radius:18px; padding:12px;
-      background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.12);">
-      <div style="opacity:.85; font-size:13px;">Рейтинг</div>
-      <div style="font-size:22px; font-weight:700; margin-top:4px;">
-        <span id="cc-rating">4.87</span> ★
+      <div class="rec">
+        <div class="dot yellow"></div>
+        <div>
+          <b>Цена выше рынка на 8%</b>
+          <div class="muted">Действие: снизить до <b>1 290 ₽</b> для роста конверсии.</div>
+        </div>
+        <div class="action"><button class="pill primary">Применить</button></div>
+      </div>
+
+      <div class="rec">
+        <div class="dot green"></div>
+        <div>
+          <b>Реклама недокручена</b>
+          <div class="muted">Действие: увеличить бюджет на <b>+15%</b> на 3 дня.</div>
+        </div>
+        <div class="action"><button class="pill">Ок</button></div>
+      </div>
+
+      <div class="fine">
+        Это демо-рекомендации. Дальше подключим реальные данные из кабинета маркетплейса.
       </div>
     </div>
-
-    <!-- Скорость продаж -->
-    <div class="tile" style="border-radius:18px; padding:12px;
-      background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.12);">
-      <div style="opacity:.85; font-size:13px;">Скорость продаж</div>
-      <div id="cc-velocity" style="font-size:22px; font-weight:700; margin-top:4px;">1.35×</div>
-    </div>
-
-    <!-- Доля рекламы -->
-    <div class="tile" style="border-radius:18px; padding:12px;
-      background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.12);">
-      <div style="opacity:.85; font-size:13px;">Доля рекламы</div>
-      <div id="cc-adshare" style="font-size:22px; font-weight:700; margin-top:4px;">21%</div>
-    </div>
   </div>
+
+  <div class="cta">
+    <button class="btn-connect" onclick="goTo('/connect')">🔗 Подключить магазин</button>
+    <button class="btn-demo" onclick="showDemo()">👀 Посмотреть демо</button>
+    <button class="btn-panel" onclick="goTo('/dashboard')">📊 Перейти в панель продавца</button>
+  </div>
+
 </div>
 
 <script>
-/* Demo-данные (подменим реальными позже из /api/compete?sku=...) */
-const C = {
-  price_gap: -0.07,       // твоя цена против средней по нише, -7% = дешевле
-  rating: 4.87,           // твой рейтинг
-  rating_avg: 4.60,       // средний рейтинг ниши
-  velocity: 1.35,         // скорость продаж относительно ниши ( >1 — быстрее )
-  ad_share: 0.21,         // доля затрат на рекламу от выручки
-  stockouts: 0.05         // % дней с Out of Stock за период
-};
-
-/* Нормализации → 0..100 */
-const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
-
-function scorePrice(gap){ // лучше, когда чуть ниже рынка, но без демпинга
-  // -20% → 90 баллов, 0 → 70, +20% → 30
-  const x = clamp(gap, -0.25, 0.25);
-  return Math.round(80 - (x*100)*1.0 + (x<0?10:0)); // бонус за лёгкую дешевизну
-}
-function scoreRating(r, rAvg){
-  const diff = clamp(r - rAvg, -1.0, 1.0); // -1..+1
-  return Math.round(60 + diff*30 + (r>=4.8?10:0)); // потолок 100
-}
-function scoreVelocity(v){ // 0.6x → 30, 1.0x → 70, 1.6x → 95
-Uni  const x = clamp(v, 0.5, 1.8);
-  return Math.round(40 + (x-0.5)/(1.3)*55); 
-}
-function scoreAdShare(s){ // меньше — лучше. 12% → 85, 25% → 55
-  const x = clamp(s, 0.05, 0.35);
-  return Math.round(95 - (x-0.05)/(0.30)*50);
-}
-function scoreStockouts(p){ // 0% → 95, 15% → 40
-  const x = clamp(p, 0, 0.2);
-  return Math.round(95 - (x/0.2)*55);
-}
-
-/* Веса уровня 3 */
-const W = {price:25, rating:25, velocity:30, ad:10, stock:10};
-
-const S = {
-  price:   scorePrice(C.price_gap),
-  rating:  scoreRating(C.rating, C.rating_avg),
-  vel:     scoreVelocity(C.velocity),
-  ad:      scoreAdShare(C.ad_share),
-  stock:   scoreStockouts(C.stockouts)
-};
-const index = Math.round(
-  (S.price*W.price + S.rating*W.rating + S.vel*W.velocity + S.ad*W.ad + S.stock*W.stock) /
-  (W.price+W.rating+W.velocity+W.ad+W.stock)
-);
-
-/* Рендер значений */
-document.getElementById('cc-price').textContent   = (C.price_gap>0?'+':'') + Math.round(C.price_gap*100) + '%';
-document.getElementById('cc-rating').textContent  = C.rating.toFixed(2);
-document.getElementById('cc-velocity').textContent= C.velocity.toFixed(2)+'×';
-document.getElementById('cc-adshare').textContent = Math.round(C.ad_share*100)+'%';
-document.getElementById('cc-score').textContent   = index;
-
-/* Бейдж – насколько сильнее рынка (грубая оценка) */
-const badge = document.getElementById('cc-badge');
-let msg = 'На уровне ниши';
-if(index>=85) msg = 'Сильнее 90% в нише';
-else if(index>=75) msg = 'Сильнее ~75% в нише';
-else if(index<=55) msg = 'Ниже среднего';
-badge.textContent = msg;
+  // Плейсхолдер времени обновления (потом заменим на реальные данные)
+  const d = new Date();
+  const hh = String(d.getHours()).padStart(2,'0');
+  const mm = String(d.getMinutes()).padStart(2,'0');
+  const el = document.getElementById('rec-updated');
+  if (el) el.textContent = `${hh}:${mm}`;
 </script>
+
 {% endblock %}
