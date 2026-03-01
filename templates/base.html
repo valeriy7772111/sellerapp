@@ -12,7 +12,7 @@
     body{
       font-family:"Segoe UI",system-ui,sans-serif;
       color:#fff;min-height:100vh;display:flex;flex-direction:column;
-      background:linear-gradient(135deg,#003b74,#00c6c3);
+      background:#0f172a;
       background-size:200% 200%;
       animation:gradientMove 10s ease infinite;
       overflow-x:hidden;padding-bottom:90px;
@@ -22,9 +22,17 @@
     @keyframes fadeIn{to{opacity:1}}
 
     main{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;text-align:center;padding:20px 10px 60px;}
+.app-container{
+max-width:900px;
+margin:auto;
+background:#111827;
+border-radius:20px;
+padding:24px;
+box-shadow:0 20px 60px rgba(0,0,0,.4);
+}
     h1{font-size:26px;margin:10px 0;text-shadow:0 0 10px rgba(0,255,255,.35)}
     p{opacity:.9;margin-bottom:16px}
-    .btn{background:linear-gradient(90deg,#00bfff,#00ffd5);color:#003b74;font-weight:700;border:none;border-radius:12px;padding:10px 20px;cursor:pointer;font-size:15px;box-shadow:0 4px 10px rgba(0,0,0,.2);transition:transform .15s ease,opacity .15s ease;}
+    .btn{background:#0f172a;color:#003b74;font-weight:700;border:none;border-radius:12px;padding:10px 20px;cursor:pointer;font-size:15px;box-shadow:0 4px 10px rgba(0,0,0,.2);transition:transform .15s ease,opacity .15s ease;}
     .btn:hover{transform:scale(1.05);opacity:.95;}
 
     footer{
@@ -36,7 +44,7 @@
     footer a{color:#00ffd5;text-decoration:none;font-weight:600}
 
     /* ====== TOAST / LOADER ====== */
-    .toast-global{position:fixed;left:50%;bottom:84px;transform:translateX(-50%) scale(.95);background:linear-gradient(180deg,#2ddc71,#16b85c);color:#fff;font-weight:700;padding:10px 18px;border-radius:12px;opacity:0;transition:opacity .3s,transform .3s;z-index:9999;font-size:15px;box-shadow:0 0 10px rgba(0,0,0,.3)}
+    .toast-global{position:fixed;left:50%;bottom:84px;transform:translateX(-50%) scale(.95);background:#0f172a;color:#fff;font-weight:700;padding:10px 18px;border-radius:12px;opacity:0;transition:opacity .3s,transform .3s;z-index:9999;font-size:15px;box-shadow:0 0 10px rgba(0,0,0,.3)}
     .toast-global.show{opacity:1;transform:translateX(-50%) scale(1)}
     #loaderOverlay{position:fixed;inset:0;background:rgba(0,0,0,.55);color:#00ffd5;font-size:18px;display:none;align-items:center;justify-content:center;z-index:9998;backdrop-filter:blur(4px)}
     #loaderOverlay.show{display:flex}
@@ -52,7 +60,7 @@
     }
     #sideMenu{
       position:fixed;right:12px;top:15vh;height:70vh;width:280px;
-      background:linear-gradient(135deg,rgba(255,255,255,.12),rgba(255,255,255,.06));
+      background:#0f172a;
       border:1px solid rgba(255,255,255,.28);border-radius:20px;
       box-shadow:0 10px 28px rgba(0,0,0,.25);
       transform:translateX(120%);transition:transform .28s ease;
@@ -69,14 +77,14 @@
       backdrop-filter:blur(6px);
     }
     .sm-btn:hover{transform:translateX(2px);background:rgba(255,255,255,.20)}
-    .sm-btn.active{background:linear-gradient(135deg,#00bfff,#00ffd5);color:#07384a;box-shadow:0 0 16px rgba(0,198,255,.55)}
+    .sm-btn.active{background:#0f172a;color:#07384a;box-shadow:0 0 16px rgba(0,198,255,.55)}
     .sm-spacer{flex:1}
     .sm-footer{padding:10px 12px;border-top:1px solid rgba(255,255,255,.2);display:flex;flex-direction:column;gap:8px;background:rgba(0,0,0,.18)}
 
     /* ====== ПЛАВАЮЩАЯ КНОПКА AI и МОДАЛКА (fade + zoom) ====== */
     #aiButton{
       position:fixed;bottom:100px;right:20px;width:64px;height:64px;border-radius:50%;
-      background:linear-gradient(135deg,#00bfff,#00ffd5);border:none;cursor:pointer;
+      background:#0f172a;border:none;cursor:pointer;
       box-shadow:0 0 20px rgba(0,255,255,.6);font-size:28px;color:#003b74;
       animation:pulseAI 3s ease-in-out infinite;z-index:9500;transition:transform .2s ease,opacity .2s ease;
     }
@@ -86,18 +94,18 @@
     #assistantModal{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;z-index:10000;backdrop-filter:blur(8px);animation:fadeInModal .3s ease forwards;}
     #assistantModal.show{display:flex}
     @keyframes fadeInModal{from{opacity:0;transform:scale(.92)}to{opacity:1;transform:scale(1)}}
-    .assistant-window{width:92%;max-width:640px;max-height:80vh;overflow:hidden;background:linear-gradient(135deg,rgba(255,255,255,.1),rgba(255,255,255,.05));border:1px solid rgba(255,255,255,.25);border-radius:20px;box-shadow:0 0 30px rgba(0,255,255,.4);display:flex;flex-direction:column;animation:zoomIn .35s ease forwards;}
+    .assistant-window{width:92%;max-width:640px;max-height:80vh;overflow:hidden;background:#0f172a;border:1px solid rgba(255,255,255,.25);border-radius:20px;box-shadow:0 0 30px rgba(0,255,255,.4);display:flex;flex-direction:column;animation:zoomIn .35s ease forwards;}
     @keyframes zoomIn{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:scale(1)}}
     .assistant-header{display:flex;justify-content:space-between;align-items:center;padding:12px 18px;border-bottom:1px solid rgba(255,255,255,.2);background:rgba(0,0,0,.3);backdrop-filter:blur(8px)}
     .assistant-header h2{font-size:18px}
     .assistant-header button{background:none;border:none;font-size:22px;color:#fff;cursor:pointer}
     .assistant-body{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:8px;text-align:left}
     .assistant-msg{background:#fff;color:#003b74;padding:10px 14px;border-radius:14px;box-shadow:0 4px 12px rgba(0,0,0,.2);max-width:80%;align-self:flex-start;animation:msgIn .25s ease both}
-    .assistant-msg.user{align-self:flex-end;background:linear-gradient(90deg,#00bfff,#00ffd5);color:#003b74}
+    .assistant-msg.user{align-self:flex-end;background:#0f172a;color:#003b74}
     @keyframes msgIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
     .assistant-input{display:flex;gap:8px;padding:10px;background:rgba(255,255,255,.1);border-top:1px solid rgba(255,255,255,.2)}
     .assistant-input input{flex:1;padding:10px 12px;border-radius:12px;border:none;outline:none;background:rgba(255,255,255,.2);color:#fff}
-    .assistant-input button{background:linear-gradient(135deg,#00bfff,#00ffd5);border:none;border-radius:12px;padding:10px 16px;font-size:18px;color:#003b74;cursor:pointer}
+    .assistant-input button{background:#0f172a;border:none;border-radius:12px;padding:10px 16px;font-size:18px;color:#003b74;cursor:pointer}
 
     @media(max-width:420px){
       .assistant-window{max-width:94%;width:94%}
@@ -154,8 +162,12 @@
   </div>
 
   <main>
+<div class="app-container">
+<div class="app-container">
     {% block content %}{% endblock %}
-  </main>
+  </div>
+</div>
+</main>
 
 
   <script>
