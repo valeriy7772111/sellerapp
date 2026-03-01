@@ -24,3 +24,13 @@ Thumbs.db
 # Secrets
 .env.local
 .env.production
+
+# backups
+*.bak*
+*.tar.gz
+
+# flask runtime
+flask_session/
+
+# temp archives
+templates_ready*
