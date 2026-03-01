@@ -6,6 +6,11 @@ from dotenv import load_dotenv
 from flask import request, Response
 
 app = Flask(__name__)
+
+@app.route('/health')
+def health():
+    return {'status': 'ok'}, 200
+
 load_dotenv()
 
 # --- секретный ключ для сессий ---
