@@ -109,7 +109,6 @@
   {% block head %}{% endblock %}
   <link rel="stylesheet" href="/static/css/custom.css">
 </head>
-{% include 'footer.html' %}
 <body>
   <!-- Лоадер и тост -->
   <div id="loaderOverlay">Загрузка...</div>
@@ -286,3 +285,5 @@
     <div>SellerApp • <span class="muted">build: {{ APP_VERSION }}</span></div>
   </div>
 </footer>
+
+{% include 'footer.html' %}
