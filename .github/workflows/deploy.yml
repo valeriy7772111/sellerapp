@@ -1,19 +1,22 @@
-name: SellerApp CI + Deploy
+name: SellerApp CI + Deploy (PRO)
 
 on:
   push:
-    branches: ["main"]
+    branches: [ "main" ]
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 concurrency:
-  group: sellerapp-deploy
+  group: sellerapp-production
   cancel-in-progress: true
 
 jobs:
   ci:
+    name: ci
     runs-on: ubuntu-latest
     timeout-minutes: 10
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -22,33 +25,30 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+          cache: "pip"
 
-      - name: Install deps (best effort)
-        run: |
-          python -m pip install --upgrade pip
-          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-          pip install ruff
-
-      - name: Lint (ruff)
-        run: |
-          ruff check . || true
+      - name: Install deps
+        run: python -m pip install --upgrade pip && pip install -r requirements.txt
 
       - name: Import app (must succeed)
-        run: |
-          python -c "import app; print('import ok')"
+        run: python -c "import app; print('import ok')"
 
   deploy:
-    needs: ci
+    name: deploy
     runs-on: ubuntu-latest
-    timeout-minutes: 10
-
+    timeout-minutes: 15
+    needs: [ ci ]
+    if: ${{ github.ref == 'refs/heads/main' && needs.ci.result == 'success' }}
+    environment:
+      name: production
     steps:
-      - name: Deploy to VPS
-        uses: appleboy/ssh-action@v1.0.3
+      - name: Deploy on VPS (protected)
+        uses: appleboy/ssh-action@v1.2.0
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
           script_stop: true
+          command_timeout: 10m
           script: |
             /usr/local/bin/deploy-sellerapp.sh
