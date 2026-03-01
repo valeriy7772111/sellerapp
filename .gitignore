@@ -11,3 +11,5 @@ data/
 *.tar.gz
 *.bak*
 .build_version
+
+.build_version
