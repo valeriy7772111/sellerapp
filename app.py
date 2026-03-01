@@ -8,20 +8,35 @@ from flask import request, Response
 app = Flask(__name__)
 
 
-import subprocess
 
-def _get_app_version():
-    # short git sha if repo exists; otherwise fallback
-    try:
-        return subprocess.check_output(["git","rev-parse","--short","HEAD"], text=True).strip()
-    except Exception:
-        return "unknown"
+import os
+from datetime import datetime
+from pathlib import Path
 
-APP_VERSION = _get_app_version()
+def _read_build_version():
+    for c in (
+        Path(__file__).resolve().parent / ".build_version",
+        Path("/root/projects/sellerapp/.build_version"),
+        Path("/root/sellerapp/.build_version"),
+    ):
+        try:
+            if c.exists():
+                v = c.read_text(encoding="utf-8", errors="ignore").strip()
+                if v:
+                    return v
+        except Exception:
+            pass
+    return "unknown"
+
+APP_VERSION = _read_build_version()
+APP_YEAR = datetime.now().year
 
 @app.context_processor
 def inject_globals():
-    return {"APP_VERSION": APP_VERSION}
+    return {"APP_VERSION": APP_VERSION, "APP_YEAR": APP_YEAR}
+
+
+import subprocess
 
 
 @app.route('/health')
