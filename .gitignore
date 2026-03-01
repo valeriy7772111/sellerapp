@@ -10,3 +10,4 @@ data/
 *.tgz
 *.tar.gz
 *.bak*
+.build_version
