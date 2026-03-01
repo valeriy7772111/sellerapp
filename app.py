@@ -12,7 +12,8 @@ load_dotenv()
 app.secret_key = os.getenv('SECRET_KEY') or secrets.token_hex(32)
 
 # --- простое "хранилище" пользователей ---
-USERS_FILE = '/root/sellerapp/users.json'
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+USERS_FILE = os.path.join(BASE_DIR, 'users.json')
 
 def _hash(pwd: str) -> str:
     return hashlib.sha256(pwd.encode('utf-8')).hexdigest()
