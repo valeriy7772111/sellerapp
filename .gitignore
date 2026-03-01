@@ -1,15 +1,26 @@
-venv/
+# Python
 __pycache__/
 *.pyc
-.env
-.sellerpay.env
-logs/
-flask_session/
-data/
-*.log
-*.tgz
-*.tar.gz
-*.bak*
-.build_version
+*.pyo
+*.pyd
 
+# Virtualenv
+venv/
+.env
+
+# Runtime files (SERVER ONLY)
 .build_version
+*.log
+instance/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Secrets
+.env.local
+.env.production
