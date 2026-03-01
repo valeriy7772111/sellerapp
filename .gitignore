@@ -34,3 +34,18 @@ flask_session/
 
 # temp archives
 templates_ready*
+
+# runtime build/version file (written by deploy script)
+.build_version
+
+# local sessions/cache
+flask_session/
+__pycache__/
+*.pyc
+
+# backups / archives
+*.bak
+*.bak.*
+*.tar.gz
+*.tgz
+templates_ready*
